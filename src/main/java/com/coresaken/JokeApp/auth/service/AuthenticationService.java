@@ -95,11 +95,11 @@ public class AuthenticationService {
         }
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            return ErrorResponse.build(1, "Incorrect login details");
+            return ErrorResponse.build(2, "Incorrect login details");
         }
 
         if (activeAccountService.isAccountActivated(user)) {
-            return ErrorResponse.build(2, "This account is not active yet");
+            return ErrorResponse.build(3, "This account is not active yet");
         }
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
