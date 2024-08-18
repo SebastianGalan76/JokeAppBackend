@@ -43,8 +43,8 @@ public class Joke {
     @OneToMany(mappedBy = "joke", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     List<Rating> ratings;
 
-    int likeAmount;
-    int dislikeAmount;
+    int likeAmount = 0;
+    int dislikeAmount = 0;
 
     public enum StatusType {
         NOT_VERIFIED, ACCEPTED, REJECTED
