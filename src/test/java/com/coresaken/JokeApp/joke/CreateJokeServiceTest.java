@@ -42,6 +42,16 @@ public class CreateJokeServiceTest {
         ResponseEntity<Response> responseEntity = createJokeService.create(jokeDto);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
+
+    @Test
+    public void create_contentTooLong(){
+        JokeDto jokeDto = new JokeDto();
+        jokeDto.setContent("A".repeat(5001));
+
+        ResponseEntity<Response> responseEntity = createJokeService.create(jokeDto);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+    }
+
     @Test
     public void create_UserWithHelperRole(){
         User user = new User();

@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AuthenticationResponse {
     ResponseStatusEnum status;
-    
     ErrorStatusResponse error;
 
     String jwtToken;
