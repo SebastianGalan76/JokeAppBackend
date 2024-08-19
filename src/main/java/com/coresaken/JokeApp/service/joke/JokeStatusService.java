@@ -78,14 +78,17 @@ public class JokeStatusService {
         return new ResponseEntity<>(Response.builder().status(ResponseStatusEnum.SUCCESS).build(), HttpStatus.OK);
     }
 
-    public void sendToVerification(Long id) {
+    public ResponseEntity<Response> sendToVerification(Long id) {
         Joke joke = jokeRepository.findById(id).orElse(null);
+        if(joke != null){
+            joke.setStatus(Joke.StatusType.NOT_VERIFIED);
+            joke.setRejectionReason(null);
 
-        assert joke != null;
-        joke.setStatus(Joke.StatusType.NOT_VERIFIED);
-        joke.setRejectionReason(null);
+            jokeRepository.save(joke);
+            return new ResponseEntity<>(Response.builder().status(ResponseStatusEnum.SUCCESS).build(), HttpStatus.OK);
+        }
 
-        jokeRepository.save(joke);
+        return ErrorResponse.build(1, "There is no joke with given ID");
     }
 
     private ResponseEntity<Response> checkRequirements(Joke joke, User user){
