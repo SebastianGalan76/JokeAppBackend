@@ -1,5 +1,7 @@
 package com.coresaken.JokeApp.service.joke;
 
+import com.coresaken.JokeApp.database.model.joke.Category;
+import com.coresaken.JokeApp.database.repository.joke.CategoryRepository;
 import com.coresaken.JokeApp.util.ErrorResponse;
 import com.coresaken.JokeApp.data.dto.JokeDto;
 import com.coresaken.JokeApp.data.enums.ResponseStatusEnum;
@@ -14,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 
-public record CreateJokeService(UserService userService, JokeRepository jokeRepository) {
+public record CreateJokeService(UserService userService, JokeRepository jokeRepository, CategoryRepository categoryRepository) {
     public ResponseEntity<Response> create(JokeDto jokeDto) {
         User user = userService.getLoggedUser();
 
@@ -27,8 +29,10 @@ public record CreateJokeService(UserService userService, JokeRepository jokeRepo
             return ErrorResponse.build(2, "Joke's content is too long");
         }
 
+        Category savedCategory = categoryRepository.getReferenceById(jokeDto.getCategory().getId());
+
         Joke joke = new Joke();
-        joke.setCategory(jokeDto.getCategory());
+        joke.setCategory(savedCategory);
         joke.setContent(content);
         joke.setCharCount(content.length());
 
@@ -43,6 +47,8 @@ public record CreateJokeService(UserService userService, JokeRepository jokeRepo
             joke.setStatus(Joke.StatusType.NOT_VERIFIED);
         }
 
+        savedCategory.changeJokeAmount(1);
+        categoryRepository.save(savedCategory);
         jokeRepository.save(joke);
 
         Response response = new Response();

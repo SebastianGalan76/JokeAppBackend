@@ -20,4 +20,11 @@ public class Category {
     String name;
 
     int jokeAmount;
+
+    public void changeJokeAmount(int value){
+        jokeAmount+=value;
+        if(jokeAmount<0){
+            jokeAmount = 0;
+        }
+    }
 }
