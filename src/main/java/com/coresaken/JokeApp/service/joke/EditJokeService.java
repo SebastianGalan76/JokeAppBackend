@@ -61,7 +61,11 @@ public class EditJokeService {
             savedCategory = null;
         }
 
-        EditedJoke editedJoke = new EditedJoke();
+        EditedJoke editedJoke = editedJokeRepository.findByJoke(joke);
+        if(editedJoke == null){
+            editedJoke = new EditedJoke();
+        }
+
         editedJoke.setJoke(joke);
         editedJoke.setUser(user);
         editedJoke.setCategory(savedCategory);

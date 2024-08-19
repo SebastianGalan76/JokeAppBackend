@@ -15,7 +15,7 @@ public class EditedJoke {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "joke_id")
     Joke joke;
 
