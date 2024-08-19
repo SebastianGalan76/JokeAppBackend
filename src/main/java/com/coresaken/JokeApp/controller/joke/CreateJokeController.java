@@ -1,4 +1,4 @@
-package com.coresaken.JokeApp.controller;
+package com.coresaken.JokeApp.controller.joke;
 
 import com.coresaken.JokeApp.data.dto.JokeDto;
 import com.coresaken.JokeApp.data.response.Response;

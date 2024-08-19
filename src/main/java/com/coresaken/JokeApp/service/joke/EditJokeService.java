@@ -11,6 +11,7 @@ import com.coresaken.JokeApp.database.repository.joke.CategoryRepository;
 import com.coresaken.JokeApp.database.repository.joke.EditedJokeRepository;
 import com.coresaken.JokeApp.database.repository.joke.JokeRepository;
 import com.coresaken.JokeApp.service.UserService;
+import com.coresaken.JokeApp.service.editedjoke.EditedJokeService;
 import com.coresaken.JokeApp.util.ErrorResponse;
 import com.coresaken.JokeApp.util.PermissionChecker;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class EditJokeService {
     final UserService userService;
     final JokeService jokeService;
+    final EditedJokeService editedJokeService;
 
     final JokeRepository jokeRepository;
     final CategoryRepository categoryRepository;
@@ -61,16 +63,7 @@ public class EditJokeService {
             savedCategory = null;
         }
 
-        EditedJoke editedJoke = editedJokeRepository.findByJoke(joke);
-        if(editedJoke == null){
-            editedJoke = new EditedJoke();
-        }
-
-        editedJoke.setJoke(joke);
-        editedJoke.setUser(user);
-        editedJoke.setCategory(savedCategory);
-        editedJoke.setContent(content);
-        editedJokeRepository.save(editedJoke);
+        editedJokeService.create(joke, user, savedCategory, content);
 
         return new ResponseEntity<>(Response.builder().status(ResponseStatusEnum.SUCCESS).build(), HttpStatus.OK);
     }

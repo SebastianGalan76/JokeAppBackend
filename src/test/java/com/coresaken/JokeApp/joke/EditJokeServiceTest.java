@@ -10,6 +10,7 @@ import com.coresaken.JokeApp.database.repository.joke.CategoryRepository;
 import com.coresaken.JokeApp.database.repository.joke.EditedJokeRepository;
 import com.coresaken.JokeApp.database.repository.joke.JokeRepository;
 import com.coresaken.JokeApp.service.UserService;
+import com.coresaken.JokeApp.service.editedjoke.EditedJokeService;
 import com.coresaken.JokeApp.service.joke.EditJokeService;
 import com.coresaken.JokeApp.service.joke.JokeService;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,8 @@ public class EditJokeServiceTest {
     private CategoryRepository categoryRepository;
     @Mock
     private EditedJokeRepository editedJokeRepository;
-
+    @Mock
+    private EditedJokeService editedJokeService;
     @InjectMocks
     private EditJokeService editJokeService;
 
@@ -156,13 +158,6 @@ public class EditJokeServiceTest {
         assertEquals(currentContent, joke.getContent());
         assertEquals(category, joke.getCategory());
 
-        ArgumentCaptor<EditedJoke> editedJokeCaptor = ArgumentCaptor.forClass(EditedJoke.class);
-        verify(editedJokeRepository).save(editedJokeCaptor.capture());
-
-        EditedJoke savedEditedJoke = editedJokeCaptor.getValue();
-        assertEquals(newContent, savedEditedJoke.getContent());
-        assertEquals(user, savedEditedJoke.getUser());
-        assertEquals(joke, savedEditedJoke.getJoke());
-        assertNull(savedEditedJoke.getCategory());
+        verify(editedJokeService).create(joke, user, null, newContent);
     }
 }
