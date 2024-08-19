@@ -21,7 +21,7 @@ public class EditedJoke {
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    Category newCategory;
+    Category category;
 
     @Column(length = 5000)
     String content;

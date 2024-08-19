@@ -64,7 +64,7 @@ public class EditJokeService {
         EditedJoke editedJoke = new EditedJoke();
         editedJoke.setJoke(joke);
         editedJoke.setUser(user);
-        editedJoke.setNewCategory(savedCategory);
+        editedJoke.setCategory(savedCategory);
         editedJoke.setContent(content);
         editedJokeRepository.save(editedJoke);
 
@@ -83,6 +83,7 @@ public class EditJokeService {
                 joke.getCategory().changeJokeAmount(-1);
                 joke.setCategory(savedCategory);
 
+                savedCategory.changeJokeAmount(1);
             }
         }
         else{
