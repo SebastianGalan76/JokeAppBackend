@@ -11,28 +11,32 @@ import com.coresaken.JokeApp.database.model.joke.Joke;
 import com.coresaken.JokeApp.database.repository.joke.JokeRepository;
 import com.coresaken.JokeApp.service.UserService;
 import com.coresaken.JokeApp.util.PermissionChecker;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-public record CreateJokeService(UserService userService, JokeRepository jokeRepository, CategoryRepository categoryRepository) {
+@Service
+@RequiredArgsConstructor
+public class CreateJokeService {
+    final UserService userService;
+    final JokeService jokeService;
+    final JokeRepository jokeRepository;
+    final CategoryRepository categoryRepository;
+
     public ResponseEntity<Response> create(JokeDto jokeDto) {
         User user = userService.getLoggedUser();
 
         String content = jokeDto.getContent().trim();
-        int contentLength = content.length();
-        if(contentLength<30){
-            return ErrorResponse.build(1, "Joke's content is too short");
+        ResponseEntity<Response> contentVerificationResponse = jokeService.checkJokeContent(content);
+        if(contentVerificationResponse.getStatusCode() != HttpStatus.OK){
+            return contentVerificationResponse;
         }
-        if(contentLength>5000){
-            return ErrorResponse.build(2, "Joke's content is too long");
-        }
-
-        Category savedCategory = categoryRepository.getReferenceById(jokeDto.getCategory().getId());
 
         Joke joke = new Joke();
-        joke.setCategory(savedCategory);
         joke.setContent(content);
         joke.setCharCount(content.length());
 
@@ -47,8 +51,18 @@ public record CreateJokeService(UserService userService, JokeRepository jokeRepo
             joke.setStatus(Joke.StatusType.NOT_VERIFIED);
         }
 
-        savedCategory.changeJokeAmount(1);
-        categoryRepository.save(savedCategory);
+        Category category = jokeDto.getCategory();
+        if(category != null){
+            Category savedCategory = categoryRepository.findById(jokeDto.getCategory().getId()).orElse(null);
+
+            if(savedCategory == null){
+                return ErrorResponse.build(3, "There is no category with given ID");
+            }
+
+            joke.setCategory(savedCategory);
+            savedCategory.changeJokeAmount(1);
+        }
+
         jokeRepository.save(joke);
 
         Response response = new Response();

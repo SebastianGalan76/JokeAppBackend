@@ -8,6 +8,8 @@ import com.coresaken.JokeApp.database.model.joke.Joke;
 import com.coresaken.JokeApp.database.repository.joke.JokeRepository;
 import com.coresaken.JokeApp.service.UserService;
 import com.coresaken.JokeApp.service.joke.CreateJokeService;
+import com.coresaken.JokeApp.service.joke.JokeService;
+import com.coresaken.JokeApp.util.ErrorResponse;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
@@ -27,6 +29,9 @@ public class CreateJokeServiceTest {
     @Mock
     private JokeRepository jokeRepository;
 
+    @Mock
+    private JokeService jokeService;
+
     @InjectMocks
     private CreateJokeService createJokeService;
 
@@ -39,6 +44,10 @@ public class CreateJokeServiceTest {
         JokeDto jokeDto = new JokeDto();
         jokeDto.setContent("SPAM");
 
+        when(jokeService.checkJokeContent(jokeDto.getContent())).thenReturn(
+                ErrorResponse.build(1, "Joke's content is too short")
+        );
+
         ResponseEntity<Response> responseEntity = createJokeService.create(jokeDto);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
@@ -47,6 +56,10 @@ public class CreateJokeServiceTest {
     public void create_contentTooLong(){
         JokeDto jokeDto = new JokeDto();
         jokeDto.setContent("A".repeat(5001));
+
+        when(jokeService.checkJokeContent(jokeDto.getContent())).thenReturn(
+                ErrorResponse.build(2, "Joke's content is too long")
+        );
 
         ResponseEntity<Response> responseEntity = createJokeService.create(jokeDto);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
@@ -62,6 +75,10 @@ public class CreateJokeServiceTest {
         JokeDto jokeDto = new JokeDto();
         jokeDto.setContent("What do you call fake spaghetti? \n" +
                 "An impasta!");
+
+        when(jokeService.checkJokeContent(jokeDto.getContent())).thenReturn(
+                ResponseEntity.ok().build()
+        );
 
         ResponseEntity<Response> responseEntity = createJokeService.create(jokeDto);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -91,6 +108,10 @@ public class CreateJokeServiceTest {
         JokeDto jokeDto = new JokeDto();
         jokeDto.setContent("What do you call fake spaghetti? \n" +
                 "An impasta!");
+
+        when(jokeService.checkJokeContent(jokeDto.getContent())).thenReturn(
+                ResponseEntity.ok().build()
+        );
 
         ResponseEntity<Response> responseEntity = createJokeService.create(jokeDto);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
