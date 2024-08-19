@@ -46,6 +46,19 @@ public class Joke {
     int likeAmount = 0;
     int dislikeAmount = 0;
 
+    public void changeLikeAmount(int value){
+        likeAmount += value;
+        if(likeAmount < 0){
+            likeAmount = 0;
+        }
+    }
+    public void changeDislikeAmount(int value){
+        dislikeAmount += value;
+        if(dislikeAmount < 0){
+            dislikeAmount = 0;
+        }
+    }
+
     public enum StatusType {
         NOT_VERIFIED, ACCEPTED, REJECTED
     }
