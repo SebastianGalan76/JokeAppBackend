@@ -41,9 +41,17 @@ public class RateJokeService {
         synchronized (joke){
             Rating rating = ratingRepository.findByJokeAndUserOrUserIp(joke, user, request.getRemoteAddr()).orElse(null);
             if(rating != null){
+                //Delete existing like
                 if(rating.getReactionType() == Rating.ReactionType.LIKE){
                     ratingRepository.delete(rating);
                     joke.changeLikeAmount(-1);
+                }
+                //Change dislike to like
+                else{
+                    rating.setReactionType(Rating.ReactionType.LIKE);
+                    rating.setRatingAt(LocalDateTime.now());
+                    joke.changeLikeAmount(1);
+                    joke.changeDislikeAmount(-1);
                 }
             }
             else{
@@ -70,9 +78,17 @@ public class RateJokeService {
         synchronized (joke){
             Rating rating = ratingRepository.findByJokeAndUserOrUserIp(joke, user, request.getRemoteAddr()).orElse(null);
             if(rating != null){
+                //Delete existing dislike
                 if(rating.getReactionType() == Rating.ReactionType.DISLIKE){
                     ratingRepository.delete(rating);
                     joke.changeDislikeAmount(-1);
+                }
+                //Change like to dislike
+                else{
+                    rating.setReactionType(Rating.ReactionType.DISLIKE);
+                    rating.setRatingAt(LocalDateTime.now());
+                    joke.changeDislikeAmount(1);
+                    joke.changeLikeAmount(-1);
                 }
             }
             else{

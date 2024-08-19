@@ -8,7 +8,6 @@ import com.coresaken.JokeApp.database.model.joke.RejectionReason;
 import com.coresaken.JokeApp.database.repository.joke.JokeRepository;
 import com.coresaken.JokeApp.database.repository.joke.RejectionReasonRepository;
 import com.coresaken.JokeApp.service.UserService;
-import com.coresaken.JokeApp.service.joke.CreateJokeService;
 import com.coresaken.JokeApp.service.joke.JokeStatusService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
