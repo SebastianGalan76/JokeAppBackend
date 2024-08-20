@@ -39,7 +39,7 @@ public class JokeList {
     @JoinColumn(name = "user_id")
     User user;
 
-    enum VisibilityType{
+    public enum VisibilityType{
         PRIVATE, PUBLIC, NOT_PUBLIC
     }
 }
