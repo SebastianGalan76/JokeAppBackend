@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CreateJokeListController {
     final CreateJokeListService createJokeListService;
 
-    @PostMapping("/joke-list/create")
+    @PostMapping("/joke-list")
     public ResponseEntity<Response> create(@RequestBody JokeListDto jokeListDto){
         return createJokeListService.create(jokeListDto);
     }
