@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -33,7 +35,7 @@ public class JokeList {
             joinColumns = @JoinColumn(name = "joke_list_id"),
             inverseJoinColumns = @JoinColumn(name = "joke_id")
     )
-    List<Joke> jokes;
+    Set<Joke> jokes = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")

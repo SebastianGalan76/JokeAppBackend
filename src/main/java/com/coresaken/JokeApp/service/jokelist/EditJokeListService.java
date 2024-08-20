@@ -31,6 +31,9 @@ public class EditJokeListService {
         if (name.isEmpty()) {
             return ErrorResponse.build(1, "The name of the list cannot be empty");
         }
+        if (name.length()>30) {
+            return ErrorResponse.build(5, "The name of the list is too long");
+        }
 
         User user = userService.getLoggedUser();
         if (user == null) {
