@@ -9,6 +9,7 @@ import com.coresaken.JokeApp.database.repository.JokeListRepository;
 import com.coresaken.JokeApp.database.repository.joke.JokeRepository;
 import com.coresaken.JokeApp.service.UserService;
 import com.coresaken.JokeApp.util.ErrorResponse;
+import com.coresaken.JokeApp.util.PermissionChecker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,6 +57,34 @@ public class JokeListService {
         return ResponseEntity.ok(Response.builder().status(ResponseStatusEnum.SUCCESS).build());
     }
 
+    public ResponseEntity<Response> deleteByUuid(UUID uuid) {
+        User user = userService.getLoggedUser();
+        JokeList jokeList = jokeListRepository.findByUuid(uuid).orElse(null);
+
+        if(user == null){
+            return ErrorResponse.build(1, "Your session has been expired", HttpStatus.UNAUTHORIZED);
+        }
+        if(jokeList == null){
+            return ErrorResponse.build(2, "There is no joke list with given id");
+        }
+        if(!jokeList.getUser().equals(user) && PermissionChecker.hasPermission(user, User.Role.MODERATOR)){
+            return ErrorResponse.build(3, "You don't have required permission do delete this joke list");
+        }
+
+        jokeListRepository.delete(jokeList);
+        return ResponseEntity.ok(Response.builder().status(ResponseStatusEnum.SUCCESS).build());
+    }
+
+    public ResponseEntity<JokeList> getByUuid(UUID uuid) {
+        JokeList jokeList = jokeListRepository.findByUuid(uuid).orElse(null);
+
+        if(jokeList == null){
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(jokeList);
+    }
+
     private ResponseEntity<Response> checkRequirements(User user, JokeList jokeList, Joke joke){
         if(user == null){
             return ErrorResponse.build(1, "Your session has been expired", HttpStatus.UNAUTHORIZED);
@@ -68,19 +97,9 @@ public class JokeListService {
         }
 
         if(!jokeList.getUser().equals(user)){
-            return ErrorResponse.build(4, "You cannot add the joke to this list");
+            return ErrorResponse.build(4, "You don't have permission to manage this joke list");
         }
 
         return ResponseEntity.ok(Response.builder().status(ResponseStatusEnum.SUCCESS).build());
-    }
-
-    public ResponseEntity<JokeList> getByUuid(UUID uuid) {
-        JokeList jokeList = jokeListRepository.findByUuid(uuid).orElse(null);
-
-        if(jokeList == null){
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(jokeList);
     }
 }

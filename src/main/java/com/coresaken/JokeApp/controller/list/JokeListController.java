@@ -19,6 +19,11 @@ public class JokeListController {
         return jokeListService.getByUuid(uuid);
     }
 
+    @DeleteMapping("/joke-list/{uuid}")
+    public ResponseEntity<Response> deleteJokeListByUuid(@PathVariable("uuid")UUID uuid){
+        return jokeListService.deleteByUuid(uuid);
+    }
+
     @PostMapping("/joke-list/{id}/{jokeId}")
     public ResponseEntity<Response> addJokeToList(@PathVariable("id") Long id, @PathVariable("jokeId") Long jokeId){
         return jokeListService.addJokeToList(id, jokeId);
