@@ -7,6 +7,7 @@ import com.coresaken.JokeApp.database.model.joke.Joke;
 import com.coresaken.JokeApp.database.repository.JokeListRepository;
 import com.coresaken.JokeApp.database.repository.joke.JokeRepository;
 import com.coresaken.JokeApp.service.UserService;
+import com.coresaken.JokeApp.service.jokelist.JokeListContainerService;
 import com.coresaken.JokeApp.service.jokelist.JokeListService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -30,7 +31,7 @@ public class JokeListServiceTest {
     private JokeRepository jokeRepository;
 
     @InjectMocks
-    private JokeListService jokeListService;
+    private JokeListContainerService jokeListContainerService;
 
     public JokeListServiceTest(){
         openMocks(this);
@@ -53,7 +54,7 @@ public class JokeListServiceTest {
         when(jokeRepository.findById(jokeId)).thenReturn(Optional.of(joke));
         when(jokeListRepository.findById(jokeListId)).thenReturn(Optional.of(jokeList));
 
-        ResponseEntity<Response> responseEntity = jokeListService.addJokeToList(jokeListId, jokeId);
+        ResponseEntity<Response> responseEntity = jokeListContainerService.addJokeToList(jokeListId, jokeId);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         Response response = responseEntity.getBody();
@@ -80,7 +81,7 @@ public class JokeListServiceTest {
         when(jokeRepository.findById(jokeId)).thenReturn(Optional.of(joke));
         when(jokeListRepository.findById(jokeListId)).thenReturn(Optional.of(jokeList));
 
-        ResponseEntity<Response> responseEntity = jokeListService.deleteJokeFromList(jokeListId, jokeId);
+        ResponseEntity<Response> responseEntity = jokeListContainerService.deleteJokeFromList(jokeListId, jokeId);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         Response response = responseEntity.getBody();
