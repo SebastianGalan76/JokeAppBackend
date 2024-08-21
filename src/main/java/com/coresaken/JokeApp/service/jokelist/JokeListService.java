@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class JokeListService {
@@ -72,4 +74,13 @@ public class JokeListService {
         return ResponseEntity.ok(Response.builder().status(ResponseStatusEnum.SUCCESS).build());
     }
 
+    public ResponseEntity<JokeList> getByUuid(UUID uuid) {
+        JokeList jokeList = jokeListRepository.findByUuid(uuid).orElse(null);
+
+        if(jokeList == null){
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(jokeList);
+    }
 }
