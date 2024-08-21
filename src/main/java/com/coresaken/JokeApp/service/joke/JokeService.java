@@ -33,7 +33,6 @@ public class JokeService {
         jokeResponse.setContent(jokes);
         return ResponseEntity.ok(jokeResponse);
     }
-
     public ResponseEntity<Response> checkJokeContent(String content){
         int contentLength = content.length();
         if(contentLength<30){
@@ -44,5 +43,15 @@ public class JokeService {
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<Joke> getJokeById(Long id) {
+        Joke joke = jokeRepository.findById(id).orElse(null);
+
+        if(joke == null){
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        return ResponseEntity.ok(joke);
     }
 }
