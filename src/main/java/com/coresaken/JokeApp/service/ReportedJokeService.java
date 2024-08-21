@@ -1,15 +1,21 @@
 package com.coresaken.JokeApp.service;
 
 import com.coresaken.JokeApp.data.enums.ResponseStatusEnum;
+import com.coresaken.JokeApp.data.response.PageResponse;
 import com.coresaken.JokeApp.data.response.Response;
 import com.coresaken.JokeApp.database.model.User;
+import com.coresaken.JokeApp.database.model.joke.Category;
 import com.coresaken.JokeApp.database.model.joke.Joke;
 import com.coresaken.JokeApp.database.model.joke.ReportedJoke;
 import com.coresaken.JokeApp.database.repository.joke.JokeRepository;
 import com.coresaken.JokeApp.database.repository.joke.ReportedJokeRepository;
+import com.coresaken.JokeApp.util.ErrorPageResponse;
 import com.coresaken.JokeApp.util.ErrorResponse;
 import com.coresaken.JokeApp.util.PermissionChecker;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,6 +27,16 @@ public class ReportedJokeService {
 
     final ReportedJokeRepository reportedJokeRepository;
     final JokeRepository jokeRepository;
+
+    public ResponseEntity<PageResponse<ReportedJoke>> getReportedJokes(int page) {
+        Pageable pageable = PageRequest.of(page, 15);
+        Page<ReportedJoke> jokes = reportedJokeRepository.findAll(pageable);
+        PageResponse<ReportedJoke> jokeResponse = new PageResponse<>();
+
+        jokeResponse.setStatus(ResponseStatusEnum.SUCCESS);
+        jokeResponse.setContent(jokes);
+        return ResponseEntity.ok(jokeResponse);
+    }
 
     public ResponseEntity<Response> accept(Long id) {
         ReportedJoke reportedJoke = reportedJokeRepository.findById(id).orElse(null);

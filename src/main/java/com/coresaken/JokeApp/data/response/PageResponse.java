@@ -1,13 +1,13 @@
 package com.coresaken.JokeApp.data.response;
 
-import com.coresaken.JokeApp.database.model.joke.Joke;
 import lombok.*;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class JokeResponse extends Response{
-    public Page<Joke> content;
+public class PageResponse<T> extends Response{
+    public Page<T> content;
 }

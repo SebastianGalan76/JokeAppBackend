@@ -1,6 +1,6 @@
 package com.coresaken.JokeApp.controller.joke;
 
-import com.coresaken.JokeApp.data.response.JokeResponse;
+import com.coresaken.JokeApp.data.response.PageResponse;
 import com.coresaken.JokeApp.database.model.joke.Joke;
 import com.coresaken.JokeApp.service.joke.JokeService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class JokeController {
     }
 
     @GetMapping("/joke/category/{id}/{page}")
-    public ResponseEntity<JokeResponse> getJokesByCategory(@PathVariable("id") Long id, @PathVariable("page") int page){
+    public ResponseEntity<PageResponse<Joke>> getJokesByCategory(@PathVariable("id") Long id, @PathVariable("page") int page){
         return jokeService.getJokesByCategory(id, page);
     }
 }

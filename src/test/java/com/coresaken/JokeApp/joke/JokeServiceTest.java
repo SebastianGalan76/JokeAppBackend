@@ -1,12 +1,11 @@
 package com.coresaken.JokeApp.joke;
 
-import com.coresaken.JokeApp.data.response.JokeResponse;
+import com.coresaken.JokeApp.data.response.PageResponse;
 import com.coresaken.JokeApp.database.model.joke.Category;
 import com.coresaken.JokeApp.database.model.joke.Joke;
 import com.coresaken.JokeApp.database.repository.joke.CategoryRepository;
 import com.coresaken.JokeApp.database.repository.joke.JokeRepository;
 import com.coresaken.JokeApp.service.joke.JokeService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -53,10 +52,10 @@ public class JokeServiceTest {
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
         when(jokeRepository.findByCategory(category, PageRequest.of(page, 15))).thenReturn(jokesPage);
 
-        ResponseEntity<JokeResponse> responseEntity = jokeService.getJokesByCategory(categoryId, page);
+        ResponseEntity<PageResponse<Joke>> responseEntity = jokeService.getJokesByCategory(categoryId, page);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        JokeResponse response = responseEntity.getBody();
+        PageResponse<Joke> response = responseEntity.getBody();
         assertNotNull(response);
 
         assertTrue(response.getContent().getContent().contains(joke));
@@ -72,10 +71,10 @@ public class JokeServiceTest {
 
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
 
-        ResponseEntity<JokeResponse> responseEntity = jokeService.getJokesByCategory(categoryId, page);
+        ResponseEntity<PageResponse<Joke>> responseEntity = jokeService.getJokesByCategory(categoryId, page);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
-        JokeResponse response = responseEntity.getBody();
+        PageResponse<Joke> response = responseEntity.getBody();
         assertNotNull(response);
         assertNotNull(response.getError());
         assertEquals(1, response.getError().getCode());
