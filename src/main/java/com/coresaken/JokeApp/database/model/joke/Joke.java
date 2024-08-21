@@ -37,11 +37,16 @@ public class Joke {
     LocalDateTime createdAt;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "rejection_reason_id")
     RejectionReason rejectionReason;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    EditedJoke editedJokes;
 
     @OneToMany(mappedBy = "joke", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     List<Rating> ratings;
+
+    @OneToMany(mappedBy = "joke", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    List<ReportedJoke> reportedJokes;
 
     int likeAmount = 0;
     int dislikeAmount = 0;
