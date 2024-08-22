@@ -1,10 +1,12 @@
 package com.coresaken.JokeApp.joke;
 
+import com.coresaken.JokeApp.data.response.JokeDto;
 import com.coresaken.JokeApp.data.response.PageResponse;
 import com.coresaken.JokeApp.database.model.joke.Category;
 import com.coresaken.JokeApp.database.model.joke.Joke;
 import com.coresaken.JokeApp.database.repository.joke.CategoryRepository;
 import com.coresaken.JokeApp.database.repository.joke.JokeRepository;
+import com.coresaken.JokeApp.service.UserService;
 import com.coresaken.JokeApp.service.joke.JokeService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -23,6 +25,9 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
 public class JokeServiceTest {
+    @Mock
+    private UserService userService;
+
     @Mock
     private JokeRepository jokeRepository;
 
@@ -51,14 +56,15 @@ public class JokeServiceTest {
 
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
         when(jokeRepository.findByCategory(category, PageRequest.of(page, 15))).thenReturn(jokesPage);
+        when(userService.getLoggedUser()).thenReturn(null);
 
-        ResponseEntity<PageResponse<Joke>> responseEntity = jokeService.getJokesByCategory(categoryId, page);
+        ResponseEntity<PageResponse<JokeDto>> responseEntity = jokeService.getJokesByCategory(categoryId, page);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        PageResponse<Joke> response = responseEntity.getBody();
+        PageResponse<JokeDto> response = responseEntity.getBody();
         assertNotNull(response);
 
-        assertTrue(response.getContent().getContent().contains(joke));
+        assertTrue(response.getContent().getContent().contains(JokeDto.build(joke)));
     }
 
     @Test
@@ -71,10 +77,10 @@ public class JokeServiceTest {
 
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
 
-        ResponseEntity<PageResponse<Joke>> responseEntity = jokeService.getJokesByCategory(categoryId, page);
+        ResponseEntity<PageResponse<JokeDto>> responseEntity = jokeService.getJokesByCategory(categoryId, page);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
-        PageResponse<Joke> response = responseEntity.getBody();
+        PageResponse<JokeDto> response = responseEntity.getBody();
         assertNotNull(response);
         assertNotNull(response.getError());
         assertEquals(1, response.getError().getCode());

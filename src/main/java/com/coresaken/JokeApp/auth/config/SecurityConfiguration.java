@@ -18,12 +18,14 @@ public class SecurityConfiguration {
     final JwtAuthenticationFilter jwtAuthFilter;
     final AuthenticationProvider authenticationProvider;
 
+    //TODO change requestMatchers
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(request -> {
             request.requestMatchers(
-                    "/auth/**")
+                    "/auth/**",
+                            "**")
                     .permitAll()
                     .anyRequest().authenticated();
         });

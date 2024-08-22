@@ -1,5 +1,6 @@
 package com.coresaken.JokeApp.database.model.joke;
 
+import com.coresaken.JokeApp.database.model.JokeList;
 import com.coresaken.JokeApp.database.model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -41,6 +42,9 @@ public class Joke {
 
     @OneToOne(cascade = CascadeType.ALL)
     EditedJoke editedJokes;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    List<JokeList> jokeLists;
 
     @OneToMany(mappedBy = "joke", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     List<Rating> ratings;

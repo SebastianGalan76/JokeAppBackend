@@ -1,5 +1,6 @@
 package com.coresaken.JokeApp.controller.joke;
 
+import com.coresaken.JokeApp.data.response.JokeDto;
 import com.coresaken.JokeApp.data.response.PageResponse;
 import com.coresaken.JokeApp.database.model.joke.Joke;
 import com.coresaken.JokeApp.service.joke.JokeService;
@@ -15,12 +16,12 @@ public class JokeController {
     final JokeService jokeService;
 
     @GetMapping("/joke/{id}")
-    public ResponseEntity<Joke> getJokeById(@PathVariable("id") Long id){
-        return jokeService.getJokeById(id);
+    public ResponseEntity<JokeDto> getJokeById(@PathVariable("id") Long id){
+        return jokeService.getJokeDtoById(id);
     }
 
     @GetMapping("/joke/category/{id}/{page}")
-    public ResponseEntity<PageResponse<Joke>> getJokesByCategory(@PathVariable("id") Long id, @PathVariable("page") int page){
+    public ResponseEntity<PageResponse<JokeDto>> getJokesByCategory(@PathVariable("id") Long id, @PathVariable("page") int page){
         return jokeService.getJokesByCategory(id, page);
     }
 }
