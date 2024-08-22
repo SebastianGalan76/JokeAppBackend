@@ -1,5 +1,6 @@
 package com.coresaken.JokeApp.database.model;
 
+import com.coresaken.JokeApp.database.model.joke.FavoriteJoke;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -34,6 +36,9 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     Role role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    List<FavoriteJoke> favoriteJokes;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

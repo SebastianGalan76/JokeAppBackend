@@ -48,6 +48,9 @@ public class Joke {
     @OneToMany(mappedBy = "joke", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     List<ReportedJoke> reportedJokes;
 
+    @OneToMany(mappedBy = "joke", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    List<FavoriteJoke> favorites;
+
     int likeAmount = 0;
     int dislikeAmount = 0;
 
