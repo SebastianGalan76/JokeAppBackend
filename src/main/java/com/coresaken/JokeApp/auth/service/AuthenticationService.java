@@ -51,7 +51,7 @@ public class AuthenticationService {
 
         //Validate provided password
         if (password.length() < 4) {
-            return ErrorResponse.build(3, "Password is too long");
+            return ErrorResponse.build(3, "Password is too short");
         }
 
         //Validate provided email
