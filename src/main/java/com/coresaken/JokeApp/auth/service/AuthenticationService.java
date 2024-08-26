@@ -43,25 +43,25 @@ public class AuthenticationService {
 
         //Validate provided login
         if (login.length() > 30) {
-            return ErrorResponse.build(1, "Login is too long");
+            return ErrorResponse.build(1, "Login jest zbyt długi");
         }
         if (login.length() < 4) {
-            return ErrorResponse.build(2, "Login is too short");
+            return ErrorResponse.build(2, "Login jest zbyt krótki");
         }
 
-        //Validate provided password
+        //Validate provided password4
         if (password.length() < 4) {
-            return ErrorResponse.build(3, "Password is too short");
+            return ErrorResponse.build(3, "Hasło jest zbyt krótkie");
         }
 
         //Validate provided email
         if (email.length() > 80) {
-            return ErrorResponse.build(4, "Email is too long");
+            return ErrorResponse.build(4, "E-mail jest zbyt długi");
         }
 
         User savedUser = userRepository.findByEmailOrLogin(email, login).orElse(null);
         if (savedUser != null) {
-            return ErrorResponse.build(5, "Login or email is already taken");
+            return ErrorResponse.build(5, "Login lub e-mail jest już zajęty");
         }
 
         User user = User.builder()
@@ -74,7 +74,7 @@ public class AuthenticationService {
         try {
             user = userRepository.save(user);
         } catch (DataIntegrityViolationException e) {
-            return ErrorResponse.build(6, "Login or email is already taken");
+            return ErrorResponse.build(6, "Login lub e-mail jest już zajęty");
         }
 
         activeAccountService.processAccountActivation(user);

@@ -64,6 +64,7 @@ public class ResetPasswordService {
 
     @Transactional
     public ResponseEntity<AuthenticationResponse> resetPassword(ResetPasswordDto resetPasswordDto) {
+        System.out.println(resetPasswordDto.getToken());
         ResetPasswordToken resetToken = resetPasswordTokenRepository.findByToken(resetPasswordDto.getToken()).orElse(null);
 
         if (resetToken == null || resetToken.getExpiredAt().isBefore(LocalDateTime.now())) {

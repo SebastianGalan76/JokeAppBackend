@@ -1,5 +1,6 @@
 package com.coresaken.JokeApp.database.model;
 
+import com.coresaken.JokeApp.database.model.joke.FavoriteCategory;
 import com.coresaken.JokeApp.database.model.joke.FavoriteJoke;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -37,8 +38,11 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     Role role;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     List<FavoriteJoke> favoriteJokes;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    List<FavoriteCategory> favoriteCategories;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

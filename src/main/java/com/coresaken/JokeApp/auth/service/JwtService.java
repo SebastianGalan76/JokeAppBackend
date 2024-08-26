@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -19,7 +20,7 @@ public class JwtService {
     @Value("${jwt.secret-key}")
     private String SECRET_KEY;
     @Value("${jwt.validity-duration}")
-    private int TOKEN_VALIDITY_DURATION;
+    private Long TOKEN_VALIDITY_DURATION;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
