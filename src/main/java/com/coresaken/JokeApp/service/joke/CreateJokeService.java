@@ -63,6 +63,11 @@ public class CreateJokeService {
             savedCategory.changeJokeAmount(1);
         }
 
+        Joke.Type type = Joke.Type.valueOf(jokeDto.getType() == null || jokeDto.getType().isBlank() ? "JOKE" : "RUSK");
+        Joke.Kind kind = Joke.Kind.valueOf(jokeDto.getKind() == null || jokeDto.getKind().isBlank() ? "TRADITIONAL" : "ENIGMATIC");
+        joke.setType(type);
+        joke.setKind(kind);
+
         jokeRepository.save(joke);
 
         Response response = new Response();

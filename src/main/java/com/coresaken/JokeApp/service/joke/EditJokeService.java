@@ -41,16 +41,18 @@ public class EditJokeService {
         if(verificationRequirementsResponse.getStatusCode() != HttpStatus.OK){
             return verificationRequirementsResponse;
         }
+        Joke.Type type = Joke.Type.valueOf(jokeDto.getType() == null || jokeDto.getType().isBlank() ? "JOKE" : "RUSK");
+        Joke.Kind kind = Joke.Kind.valueOf(jokeDto.getKind() == null || jokeDto.getKind().isBlank() ? "TRADITIONAL" : "ENIGMATIC");
 
         if(PermissionChecker.hasPermission(user, User.Role.HELPER)){
-            return editByStaff(joke, jokeDto.getCategory(), content);
+            return editByStaff(joke, jokeDto.getCategory(), content, type, kind);
         }
         else{
-            return editByUser(user, joke, jokeDto.getCategory(), content);
+            return editByUser(user, joke, jokeDto.getCategory(), content, type, kind);
         }
     }
 
-    private ResponseEntity<Response> editByUser(User user, Joke joke, Category newCategory, String content) {
+    private ResponseEntity<Response> editByUser(User user, Joke joke, Category newCategory, String content, Joke.Type type, Joke.Kind kind) {
         Category savedCategory;
         if(newCategory != null){
              savedCategory = categoryRepository.findById(newCategory.getId()).orElse(null);
@@ -63,11 +65,11 @@ public class EditJokeService {
             savedCategory = null;
         }
 
-        editedJokeService.create(joke, user, savedCategory, content);
+        editedJokeService.create(joke, user, savedCategory, content, type, kind);
 
         return new ResponseEntity<>(Response.builder().status(ResponseStatusEnum.SUCCESS).build(), HttpStatus.OK);
     }
-    private ResponseEntity<Response> editByStaff(Joke joke, Category newCategory, String content) {
+    private ResponseEntity<Response> editByStaff(Joke joke, Category newCategory, String content, Joke.Type type, Joke.Kind kind) {
         if(newCategory != null){
             Category savedCategory = categoryRepository.findById(newCategory.getId()).orElse(null);
 
@@ -90,6 +92,9 @@ public class EditJokeService {
                 joke.setCategory(null);
             }
         }
+
+        joke.setType(type);
+        joke.setKind(kind);
 
         joke.setContent(content);
         return new ResponseEntity<>(Response.builder().status(ResponseStatusEnum.SUCCESS).build(), HttpStatus.OK);

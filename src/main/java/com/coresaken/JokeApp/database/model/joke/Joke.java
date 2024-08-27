@@ -35,6 +35,12 @@ public class Joke {
     @JoinColumn(name = "user_id")
     User user;
 
+    @Enumerated(EnumType.STRING)
+    Type type;
+
+    @Enumerated(EnumType.STRING)
+    Kind kind;
+
     LocalDateTime createdAt;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -73,5 +79,15 @@ public class Joke {
 
     public enum StatusType {
         NOT_VERIFIED, ACCEPTED, REJECTED
+    }
+
+    public enum Type{
+        JOKE,
+        RUSK // :)
+    }
+
+    public enum Kind{
+        TRADITIONAL,
+        ENIGMATIC // Question - Answer
     }
 }

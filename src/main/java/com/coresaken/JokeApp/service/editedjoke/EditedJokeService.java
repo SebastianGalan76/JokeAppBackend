@@ -25,11 +25,13 @@ public class EditedJokeService {
     final EditedJokeRepository editedJokeRepository;
     final JokeRepository jokeRepository;
 
-    public void create(Joke joke, User user, Category category, String content){
+    public void create(Joke joke, User user, Category category, String content, Joke.Type type, Joke.Kind kind){
         EditedJoke editedJoke = editedJokeRepository.findByJoke(joke);
         if(editedJoke == null){
             editedJoke = new EditedJoke();
         }
+        editedJoke.setType(type);
+        editedJoke.setKind(kind);
 
         editedJoke.setJoke(joke);
         editedJoke.setUser(user);

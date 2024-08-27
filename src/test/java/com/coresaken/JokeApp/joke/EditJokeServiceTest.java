@@ -155,6 +155,6 @@ public class EditJokeServiceTest {
         assertEquals(currentContent, joke.getContent());
         assertEquals(category, joke.getCategory());
 
-        verify(editedJokeService).create(joke, user, null, newContent);
+        verify(editedJokeService).create(joke, user, null, newContent, Joke.Type.JOKE, Joke.Kind.TRADITIONAL);
     }
 }

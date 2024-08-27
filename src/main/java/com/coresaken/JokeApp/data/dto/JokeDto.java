@@ -11,4 +11,7 @@ import lombok.NoArgsConstructor;
 public class JokeDto {
     Category category;
     String content;
+
+    String type; //Joke or rusk
+    String kind; //Traditional or enigmatic
 }

@@ -51,7 +51,7 @@ public class JokeService {
     }
     public ResponseEntity<Response> checkJokeContent(String content){
         int contentLength = content.length();
-        if(contentLength<30){
+        if(contentLength<10){
             return ErrorResponse.build(1, "Joke's content is too short");
         }
         if(contentLength>5000){

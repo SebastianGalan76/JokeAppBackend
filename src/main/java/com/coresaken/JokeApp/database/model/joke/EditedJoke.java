@@ -26,6 +26,12 @@ public class EditedJoke {
     @Column(length = 5000)
     String content;
 
+    @Enumerated(EnumType.STRING)
+    Joke.Type type;
+
+    @Enumerated(EnumType.STRING)
+    Joke.Kind kind;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
