@@ -58,7 +58,7 @@ public class JokeServiceTest {
         when(jokeRepository.findByCategory(category, PageRequest.of(page, 15))).thenReturn(jokesPage);
         when(userService.getLoggedUser()).thenReturn(null);
 
-        ResponseEntity<PageResponse<JokeDto>> responseEntity = jokeService.getJokesByCategory(categoryId, page);
+        ResponseEntity<PageResponse<JokeDto>> responseEntity = jokeService.getJokesByCategory(categoryId, page, null);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         PageResponse<JokeDto> response = responseEntity.getBody();
@@ -77,7 +77,7 @@ public class JokeServiceTest {
 
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
 
-        ResponseEntity<PageResponse<JokeDto>> responseEntity = jokeService.getJokesByCategory(categoryId, page);
+        ResponseEntity<PageResponse<JokeDto>> responseEntity = jokeService.getJokesByCategory(categoryId, page, null);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
         PageResponse<JokeDto> response = responseEntity.getBody();

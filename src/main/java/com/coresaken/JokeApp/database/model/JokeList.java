@@ -1,15 +1,13 @@
 package com.coresaken.JokeApp.database.model;
 
 import com.coresaken.JokeApp.database.model.joke.Joke;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Data
@@ -29,13 +27,13 @@ public class JokeList {
     @Enumerated(EnumType.STRING)
     VisibilityType visibilityType;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "joke_list_jokes",
             joinColumns = @JoinColumn(name = "joke_list_id"),
             inverseJoinColumns = @JoinColumn(name = "joke_id")
     )
-    Set<Joke> jokes = new HashSet<>();
+    List<Joke> jokes = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")

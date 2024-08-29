@@ -56,17 +56,17 @@ public class JokeListContainerService {
 
     private ResponseEntity<Response> checkRequirements(User user, JokeList jokeList, Joke joke){
         if(user == null){
-            return ErrorResponse.build(1, "Your session has been expired", HttpStatus.UNAUTHORIZED);
+            return ErrorResponse.build(1, "Twoja sesja wygasła. Zaloguj się ponownie", HttpStatus.UNAUTHORIZED);
         }
         if(jokeList == null){
-            return ErrorResponse.build(2, "There is no joke list with given id");
+            return ErrorResponse.build(2, "Nie ma listy dowcipów o podanym identyfikatorze");
         }
         if(joke == null){
-            return ErrorResponse.build(3, "There is no joke with given id");
+            return ErrorResponse.build(3, "Nie ma dowcipu o podanym identyfikatorze");
         }
 
         if(!jokeList.getUser().equals(user)){
-            return ErrorResponse.build(4, "You don't have permission to manage this joke list");
+            return ErrorResponse.build(4, "Nie masz uprawnień, aby modyfikować tę listę dowcipów");
         }
 
         return ResponseEntity.ok(Response.builder().status(ResponseStatusEnum.SUCCESS).build());

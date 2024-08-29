@@ -23,9 +23,11 @@ public class JokeDto {
     int charCount;
 
     Joke.StatusType status;
+    Joke.Type type;
+    Joke.Kind kind;
 
     Category category;
-    User owner;
+    Owner owner;
 
     LocalDateTime createdAt;
 
@@ -37,17 +39,19 @@ public class JokeDto {
     boolean isFavorite;
     List<JokeListDto> jokeLists;
 
-    public static JokeDto build(User loggedInUser, Joke joke){
+    public static JokeDto build(User loggedInUser, Joke joke, String ip){
         JokeDto jokeDto = build(joke);
+
+        Optional<Rating> userRating = joke.getRatings().stream().filter(rating -> (rating.getUser() != null && rating.getUser().equals(loggedInUser)) || (loggedInUser == null && rating.getUserIp().equals(ip))).findFirst();
+        userRating.ifPresent(rating -> jokeDto.setUserRating(rating.getReactionType() == Rating.ReactionType.LIKE ? 1 : -1));
+
         if(loggedInUser == null){
             return jokeDto;
         }
 
-        Optional<Rating> userRating = joke.getRatings().stream().filter(rating -> rating.getUser().equals(loggedInUser)).findFirst();
-        userRating.ifPresent(rating -> jokeDto.setUserRating(rating.getReactionType() == Rating.ReactionType.LIKE ? 1 : -1));
-
         List<FavoriteJoke> favoriteJokes = loggedInUser.getFavoriteJokes();
-        Optional<FavoriteJoke> favoriteJoke = favoriteJokes.stream().filter(fj -> Objects.equals(fj.getId(), joke.getId())).findFirst();
+
+        Optional<FavoriteJoke> favoriteJoke = favoriteJokes.stream().filter(fj -> Objects.equals(fj.getJoke().getId(), joke.getId())).findFirst();
         if(favoriteJoke.isPresent()){
             jokeDto.setFavorite(true);
         }
@@ -71,8 +75,10 @@ public class JokeDto {
         jokeDto.setCharCount(joke.getCharCount());
         jokeDto.setStatus(joke.getStatus());
         jokeDto.setCategory(joke.getCategory());
-        jokeDto.setOwner(joke.getUser());
+        jokeDto.setOwner(joke.getUser() != null ? new Owner(joke.getUser().getLogin()) : null);
         jokeDto.setCreatedAt(joke.getCreatedAt());
+        jokeDto.setType(joke.getType());
+        jokeDto.setKind(joke.getKind());
 
         jokeDto.setLikeAmount(joke.getLikeAmount());
         jokeDto.setDislikeAmount(joke.getDislikeAmount());
@@ -84,5 +90,11 @@ public class JokeDto {
     public static class JokeListDto{
         Long id;
         String name;
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class Owner{
+        String login;
     }
 }

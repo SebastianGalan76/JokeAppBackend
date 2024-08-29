@@ -1,7 +1,7 @@
 package com.coresaken.JokeApp.controller.list;
 
 import com.coresaken.JokeApp.data.dto.JokeListDto;
-import com.coresaken.JokeApp.data.response.Response;
+import com.coresaken.JokeApp.data.response.ResponseContent;
 import com.coresaken.JokeApp.service.jokelist.CreateJokeListService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ public class CreateJokeListController {
     final CreateJokeListService createJokeListService;
 
     @PostMapping("/joke-list")
-    public ResponseEntity<Response> create(@RequestBody JokeListDto jokeListDto){
+    public ResponseEntity<ResponseContent<com.coresaken.JokeApp.data.response.JokeListDto>> create(@RequestBody JokeListDto jokeListDto){
         return createJokeListService.create(jokeListDto);
     }
 }

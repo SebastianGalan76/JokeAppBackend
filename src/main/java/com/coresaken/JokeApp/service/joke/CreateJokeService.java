@@ -29,6 +29,7 @@ public class CreateJokeService {
 
     public ResponseEntity<Response> create(JokeDto jokeDto) {
         User user = userService.getLoggedUser();
+        System.out.println(user);
 
         String content = jokeDto.getContent().trim();
         ResponseEntity<Response> contentVerificationResponse = jokeService.checkJokeContent(content);

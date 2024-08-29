@@ -11,11 +11,12 @@ import com.coresaken.JokeApp.database.repository.joke.JokeRepository;
 import com.coresaken.JokeApp.service.UserService;
 import com.coresaken.JokeApp.util.ErrorPageResponse;
 import com.coresaken.JokeApp.util.ErrorResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,7 @@ public class JokeService {
     final JokeRepository jokeRepository;
     final CategoryRepository categoryRepository;
 
-    public ResponseEntity<PageResponse<JokeDto>> getJokesByCategory(Long id, int page) {
+    public ResponseEntity<PageResponse<JokeDto>> getJokesByCategory(Long id, int page, HttpServletRequest request) {
         User user = userService.getLoggedUser();
 
         Category category = categoryRepository.findById(id).orElse(null);
@@ -41,7 +42,7 @@ public class JokeService {
         Pageable pageable = PageRequest.of(page, 15);
 
         Page<Joke> jokes = jokeRepository.findByCategory(category, pageable);
-        Page<JokeDto> jokeDtoPage = jokes.map(joke -> JokeDto.build(user, joke));
+        Page<JokeDto> jokeDtoPage = jokes.map(joke -> JokeDto.build(user, joke, request.getRemoteAddr()));
 
         PageResponse<JokeDto> jokeResponse = new PageResponse<>();
         jokeResponse.setStatus(ResponseStatusEnum.SUCCESS);
@@ -69,6 +70,20 @@ public class JokeService {
             return ResponseEntity.badRequest().body(null);
         }
 
-        return ResponseEntity.ok(JokeDto.build(user, joke));
+        return ResponseEntity.ok(JokeDto.build(user, joke, null));
+    }
+
+    public PageResponse<JokeDto> getJokes(int page, HttpServletRequest request) {
+        User user = userService.getLoggedUser();
+        Pageable pageable = PageRequest.of(page, 15, Sort.by("id").descending());
+
+        Page<Joke> jokes = jokeRepository.findAll(pageable);
+        Page<JokeDto> jokeDtoPage = jokes.map(joke -> JokeDto.build(user, joke, request.getRemoteAddr()));
+
+        PageResponse<JokeDto> jokeResponse = new PageResponse<>();
+        jokeResponse.setStatus(ResponseStatusEnum.SUCCESS);
+        jokeResponse.setContent(jokeDtoPage);
+
+        return jokeResponse;
     }
 }

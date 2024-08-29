@@ -2,6 +2,7 @@ package com.coresaken.JokeApp.database.model;
 
 import com.coresaken.JokeApp.database.model.joke.FavoriteCategory;
 import com.coresaken.JokeApp.database.model.joke.FavoriteJoke;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,6 +44,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     List<FavoriteCategory> favoriteCategories;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    List<JokeList> jokeLists;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

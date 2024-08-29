@@ -3,6 +3,7 @@ package com.coresaken.JokeApp.jokelist;
 import com.coresaken.JokeApp.data.dto.JokeListDto;
 import com.coresaken.JokeApp.data.enums.ResponseStatusEnum;
 import com.coresaken.JokeApp.data.response.Response;
+import com.coresaken.JokeApp.data.response.ResponseContent;
 import com.coresaken.JokeApp.database.model.JokeList;
 import com.coresaken.JokeApp.database.model.User;
 import com.coresaken.JokeApp.database.repository.JokeListRepository;
@@ -39,7 +40,7 @@ public class CreateJokeListServiceTest {
         JokeListDto jokeListDto = new JokeListDto();
         jokeListDto.setName("Black Humor");
 
-        ResponseEntity<Response> responseEntity = createJokeListService.create(jokeListDto);
+        ResponseEntity<ResponseContent<com.coresaken.JokeApp.data.response.JokeListDto>> responseEntity = createJokeListService.create(jokeListDto);
         assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
     }
 
@@ -48,7 +49,7 @@ public class CreateJokeListServiceTest {
         JokeListDto jokeListDto = new JokeListDto();
         jokeListDto.setName("      ");
 
-        ResponseEntity<Response> responseEntity = createJokeListService.create(jokeListDto);
+        ResponseEntity<ResponseContent<com.coresaken.JokeApp.data.response.JokeListDto>> responseEntity = createJokeListService.create(jokeListDto);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
         Response response = responseEntity.getBody();
@@ -66,7 +67,7 @@ public class CreateJokeListServiceTest {
 
         when(userService.getLoggedUser()).thenReturn(new User());
 
-        ResponseEntity<Response> responseEntity = createJokeListService.create(jokeListDto);
+        ResponseEntity<ResponseContent<com.coresaken.JokeApp.data.response.JokeListDto>> responseEntity = createJokeListService.create(jokeListDto);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         Response response = responseEntity.getBody();
@@ -91,7 +92,7 @@ public class CreateJokeListServiceTest {
 
         when(userService.getLoggedUser()).thenReturn(new User());
 
-        ResponseEntity<Response> responseEntity = createJokeListService.create(jokeListDto);
+        ResponseEntity<ResponseContent<com.coresaken.JokeApp.data.response.JokeListDto>> responseEntity = createJokeListService.create(jokeListDto);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         Response response = responseEntity.getBody();
