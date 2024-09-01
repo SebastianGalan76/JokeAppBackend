@@ -3,6 +3,7 @@ package com.coresaken.JokeApp.service.joke;
 import com.coresaken.JokeApp.data.enums.ResponseStatusEnum;
 import com.coresaken.JokeApp.data.response.Response;
 import com.coresaken.JokeApp.database.model.User;
+import com.coresaken.JokeApp.database.model.category.Category;
 import com.coresaken.JokeApp.database.model.joke.*;
 import com.coresaken.JokeApp.database.repository.JokeListRepository;
 import com.coresaken.JokeApp.database.repository.joke.FavoriteJokeRepository;

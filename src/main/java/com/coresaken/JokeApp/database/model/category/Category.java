@@ -1,4 +1,4 @@
-package com.coresaken.JokeApp.database.model.joke;
+package com.coresaken.JokeApp.database.model.category;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

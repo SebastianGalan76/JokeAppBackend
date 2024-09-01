@@ -1,6 +1,7 @@
 package com.coresaken.JokeApp.database.model.joke;
 
 import com.coresaken.JokeApp.database.model.User;
+import com.coresaken.JokeApp.database.model.category.Category;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

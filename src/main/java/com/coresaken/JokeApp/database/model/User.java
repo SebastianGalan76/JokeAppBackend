@@ -1,8 +1,7 @@
 package com.coresaken.JokeApp.database.model;
 
-import com.coresaken.JokeApp.database.model.joke.FavoriteCategory;
+import com.coresaken.JokeApp.database.model.category.FavoriteCategory;
 import com.coresaken.JokeApp.database.model.joke.FavoriteJoke;
-import com.coresaken.JokeApp.database.model.joke.ReportedJoke;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,7 +12,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;

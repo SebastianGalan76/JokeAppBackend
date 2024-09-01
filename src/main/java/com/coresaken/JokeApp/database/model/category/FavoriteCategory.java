@@ -1,4 +1,4 @@
-package com.coresaken.JokeApp.database.model.joke;
+package com.coresaken.JokeApp.database.model.category;
 
 import com.coresaken.JokeApp.database.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;

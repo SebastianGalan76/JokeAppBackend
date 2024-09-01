@@ -3,7 +3,7 @@ package com.coresaken.JokeApp.service.editedjoke;
 import com.coresaken.JokeApp.data.enums.ResponseStatusEnum;
 import com.coresaken.JokeApp.data.response.Response;
 import com.coresaken.JokeApp.database.model.User;
-import com.coresaken.JokeApp.database.model.joke.Category;
+import com.coresaken.JokeApp.database.model.category.Category;
 import com.coresaken.JokeApp.database.model.joke.EditedJoke;
 import com.coresaken.JokeApp.database.model.joke.Joke;
 import com.coresaken.JokeApp.database.repository.joke.EditedJokeRepository;

@@ -2,13 +2,13 @@ package com.coresaken.JokeApp.database.model.joke;
 
 import com.coresaken.JokeApp.database.model.JokeList;
 import com.coresaken.JokeApp.database.model.User;
+import com.coresaken.JokeApp.database.model.category.Category;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity

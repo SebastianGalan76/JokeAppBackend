@@ -1,15 +1,14 @@
-package com.coresaken.JokeApp.service.joke;
+package com.coresaken.JokeApp.service.category;
 
 import com.coresaken.JokeApp.data.response.CategoryDto;
 import com.coresaken.JokeApp.database.model.User;
-import com.coresaken.JokeApp.database.model.joke.Category;
-import com.coresaken.JokeApp.database.model.joke.FavoriteCategory;
+import com.coresaken.JokeApp.database.model.category.Category;
+import com.coresaken.JokeApp.database.model.category.FavoriteCategory;
 import com.coresaken.JokeApp.database.repository.joke.CategoryRepository;
 import com.coresaken.JokeApp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

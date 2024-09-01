@@ -1,6 +1,6 @@
 package com.coresaken.JokeApp.service.joke;
 
-import com.coresaken.JokeApp.database.model.joke.Category;
+import com.coresaken.JokeApp.database.model.category.Category;
 import com.coresaken.JokeApp.database.repository.joke.CategoryRepository;
 import com.coresaken.JokeApp.util.ErrorResponse;
 import com.coresaken.JokeApp.data.dto.JokeDto;

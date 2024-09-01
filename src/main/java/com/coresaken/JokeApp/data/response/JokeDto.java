@@ -2,8 +2,8 @@ package com.coresaken.JokeApp.data.response;
 
 import com.coresaken.JokeApp.database.model.JokeList;
 import com.coresaken.JokeApp.database.model.User;
+import com.coresaken.JokeApp.database.model.category.Category;
 import com.coresaken.JokeApp.database.model.joke.*;
-import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

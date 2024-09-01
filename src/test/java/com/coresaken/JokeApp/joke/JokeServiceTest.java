@@ -2,7 +2,7 @@ package com.coresaken.JokeApp.joke;
 
 import com.coresaken.JokeApp.data.response.JokeDto;
 import com.coresaken.JokeApp.data.response.PageResponse;
-import com.coresaken.JokeApp.database.model.joke.Category;
+import com.coresaken.JokeApp.database.model.category.Category;
 import com.coresaken.JokeApp.database.model.joke.Joke;
 import com.coresaken.JokeApp.database.repository.joke.CategoryRepository;
 import com.coresaken.JokeApp.database.repository.joke.JokeRepository;
