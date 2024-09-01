@@ -24,5 +24,6 @@ public class FavoriteJoke {
 
     @ManyToOne
     @JoinColumn(name = "joke_id")
+            @JsonIgnore
     Joke joke;
 }

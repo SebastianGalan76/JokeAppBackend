@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -43,14 +44,11 @@ public class Joke {
 
     LocalDateTime createdAt;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     RejectionReason rejectionReason;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "joke", cascade = CascadeType.ALL, orphanRemoval = true)
     EditedJoke editedJokes;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    List<JokeList> jokeLists;
 
     @OneToMany(mappedBy = "joke", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     List<Rating> ratings;
@@ -60,6 +58,9 @@ public class Joke {
 
     @OneToMany(mappedBy = "joke", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     List<FavoriteJoke> favorites;
+
+    @ManyToMany(mappedBy = "jokes", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    List<JokeList> jokeLists;
 
     int likeAmount = 0;
     int dislikeAmount = 0;

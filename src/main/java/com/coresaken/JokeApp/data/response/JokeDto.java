@@ -75,7 +75,7 @@ public class JokeDto {
         jokeDto.setCharCount(joke.getCharCount());
         jokeDto.setStatus(joke.getStatus());
         jokeDto.setCategory(joke.getCategory());
-        jokeDto.setOwner(joke.getUser() != null ? new Owner(joke.getUser().getLogin()) : null);
+        jokeDto.setOwner(joke.getUser() != null ? new Owner(joke.getUser().getId(), joke.getUser().getLogin()) : null);
         jokeDto.setCreatedAt(joke.getCreatedAt());
         jokeDto.setType(joke.getType());
         jokeDto.setKind(joke.getKind());
@@ -95,6 +95,7 @@ public class JokeDto {
     @Data
     @AllArgsConstructor
     public static class Owner{
+        Long id;
         String login;
     }
 }
