@@ -3,13 +3,13 @@ import com.coresaken.JokeApp.data.enums.ResponseStatusEnum;
 import com.coresaken.JokeApp.data.response.JokeDto;
 import com.coresaken.JokeApp.data.response.PageResponse;
 import com.coresaken.JokeApp.data.response.Response;
+import com.coresaken.JokeApp.data.response.ResponseContent;
 import com.coresaken.JokeApp.database.model.User;
 import com.coresaken.JokeApp.database.model.category.Category;
 import com.coresaken.JokeApp.database.model.joke.Joke;
 import com.coresaken.JokeApp.database.repository.joke.CategoryRepository;
 import com.coresaken.JokeApp.database.repository.joke.JokeRepository;
 import com.coresaken.JokeApp.service.UserService;
-import com.coresaken.JokeApp.util.ErrorPageResponse;
 import com.coresaken.JokeApp.util.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +19,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +35,7 @@ public class JokeService {
 
         Category category = categoryRepository.findById(id).orElse(null);
         if(category == null){
-            return new ErrorPageResponse<JokeDto>().build(1, "There is no category with given ID");
+            return ResponseEntity.badRequest().body(PageResponse.buildError(1, "There is no category with given ID"));
         }
 
         Pageable pageable = PageRequest.of(page, 15);
@@ -82,5 +84,18 @@ public class JokeService {
         jokeResponse.setContent(jokeDtoPage);
 
         return jokeResponse;
+    }
+
+    public ResponseContent<List<JokeDto>> getRandomJokes(int amount, HttpServletRequest request) {
+        User user = userService.getLoggedUser();
+
+        List<Joke> jokes = jokeRepository.findRandomJokes(amount);
+        List<JokeDto> jokeDtoPage = jokes.stream().map(joke -> JokeDto.build(user, joke, request.getRemoteAddr())).toList();
+
+        ResponseContent<List<JokeDto>> responseContent = new ResponseContent<>();
+        responseContent.setStatus(ResponseStatusEnum.SUCCESS);
+        responseContent.setContent(jokeDtoPage);
+
+        return responseContent;
     }
 }

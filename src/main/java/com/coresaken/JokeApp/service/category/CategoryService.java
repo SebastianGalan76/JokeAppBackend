@@ -1,6 +1,10 @@
 package com.coresaken.JokeApp.service.category;
 
+import com.coresaken.JokeApp.data.enums.ResponseStatusEnum;
 import com.coresaken.JokeApp.data.response.CategoryDto;
+import com.coresaken.JokeApp.data.response.ErrorStatusResponse;
+import com.coresaken.JokeApp.data.response.JokeDto;
+import com.coresaken.JokeApp.data.response.PageResponse;
 import com.coresaken.JokeApp.database.model.User;
 import com.coresaken.JokeApp.database.model.category.Category;
 import com.coresaken.JokeApp.database.model.category.FavoriteCategory;

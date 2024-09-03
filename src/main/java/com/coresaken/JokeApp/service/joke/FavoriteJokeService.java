@@ -10,7 +10,6 @@ import com.coresaken.JokeApp.database.model.joke.Joke;
 import com.coresaken.JokeApp.database.repository.joke.FavoriteJokeRepository;
 import com.coresaken.JokeApp.database.repository.joke.JokeRepository;
 import com.coresaken.JokeApp.service.UserService;
-import com.coresaken.JokeApp.util.ErrorPageResponse;
 import com.coresaken.JokeApp.util.ErrorResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -62,7 +61,7 @@ public class FavoriteJokeService {
     public ResponseEntity<PageResponse<JokeDto>> getJokes(int page) {
         User user = userService.getLoggedUser();
         if(user == null){
-            return new ErrorPageResponse<JokeDto>().build(1, "Zaloguj się, aby zobaczyć ulubione dowcipy");
+            return ResponseEntity.badRequest().body(PageResponse.buildError(1, "Zaloguj się, aby zobaczyć ulubione dowcipy"));
         }
 
         int size = 15;
