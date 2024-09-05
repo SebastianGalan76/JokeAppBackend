@@ -4,6 +4,7 @@ import com.coresaken.JokeApp.data.response.JokeDto;
 import com.coresaken.JokeApp.data.response.PageResponse;
 import com.coresaken.JokeApp.data.response.ResponseContent;
 import com.coresaken.JokeApp.service.joke.JokeService;
+import com.sun.tools.jconsole.JConsoleContext;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
@@ -31,6 +32,7 @@ public class JokeController {
 
     @GetMapping("/joke/category/{id}/{page}")
     public ResponseEntity<PageResponse<JokeDto>> getJokesByCategory(@PathVariable("id") Long id, @PathVariable("page") int page, HttpServletRequest request){
+        System.out.println("S1");
         return jokeService.getJokesByCategory(id, page, request);
     }
 

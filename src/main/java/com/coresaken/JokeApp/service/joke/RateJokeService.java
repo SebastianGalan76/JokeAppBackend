@@ -43,6 +43,7 @@ public class RateJokeService {
             if(rating != null){
                 //Delete existing like
                 if(rating.getReactionType() == Rating.ReactionType.LIKE){
+                    joke.getRatings().remove(rating);
                     ratingRepository.delete(rating);
                     joke.changeLikeAmount(-1);
                 }
@@ -80,7 +81,10 @@ public class RateJokeService {
             if(rating != null){
                 //Delete existing dislike
                 if(rating.getReactionType() == Rating.ReactionType.DISLIKE){
+                    joke.getRatings().remove(rating);
                     ratingRepository.delete(rating);
+                    ratingRepository.flush();
+
                     joke.changeDislikeAmount(-1);
                 }
                 //Change like to dislike

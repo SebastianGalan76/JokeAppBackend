@@ -1,25 +1,27 @@
 package com.coresaken.JokeApp.service.category;
 
-import com.coresaken.JokeApp.data.enums.ResponseStatusEnum;
 import com.coresaken.JokeApp.data.response.CategoryDto;
-import com.coresaken.JokeApp.data.response.ErrorStatusResponse;
-import com.coresaken.JokeApp.data.response.JokeDto;
-import com.coresaken.JokeApp.data.response.PageResponse;
 import com.coresaken.JokeApp.database.model.User;
+import com.coresaken.JokeApp.database.model.UserCategoryIndex;
 import com.coresaken.JokeApp.database.model.category.Category;
 import com.coresaken.JokeApp.database.model.category.FavoriteCategory;
+import com.coresaken.JokeApp.database.repository.UserCategoryIndexRepository;
 import com.coresaken.JokeApp.database.repository.joke.CategoryRepository;
 import com.coresaken.JokeApp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
     final CategoryRepository categoryRepository;
+    final UserCategoryIndexRepository userCategoryIndexRepository;
 
     final UserService userService;
 
@@ -32,17 +34,33 @@ public class CategoryService {
                         .toList())
                 .orElseGet(List::of);
 
-        return categoryRepository.findAll().stream()
-                .map(category -> mapToCategoryDto(category, favoriteCategoryIds))
+        List<Category> categories = categoryRepository.findAll();
+        List<UserCategoryIndex> userCategoryIndices = new ArrayList<>();
+        if(optionalUser.isPresent()){
+            userCategoryIndices = userCategoryIndexRepository.findByUser(optionalUser.get());
+        }
+
+        Map<Long, Integer> categoryIndexMap = userCategoryIndices.stream()
+                .collect(Collectors.toMap(uci -> uci.getCategory().getId(), UserCategoryIndex::getIndex));
+
+        return categories.stream()
+                .map(category -> {
+                    int userIndex = optionalUser.isPresent()
+                            ? categoryIndexMap.getOrDefault(category.getId(), 0)
+                            : -1;
+                    return mapToCategoryDto(category, favoriteCategoryIds, userIndex);
+                })
                 .toList();
     }
 
-    private CategoryDto mapToCategoryDto(Category category, List<Long> favoriteCategoryIds) {
+    private CategoryDto mapToCategoryDto(Category category, List<Long> favoriteCategoryIds, int userIndex) {
         return new CategoryDto(
                 category.getId(),
                 category.getName(),
+                category.getUrl(),
                 category.getJokeAmount(),
-                favoriteCategoryIds.contains(category.getId())
+                favoriteCategoryIds.contains(category.getId()),
+                userIndex
         );
     }
 }
