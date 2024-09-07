@@ -6,9 +6,11 @@ import com.coresaken.JokeApp.database.model.JokeList;
 import com.coresaken.JokeApp.database.model.User;
 import com.coresaken.JokeApp.database.repository.JokeListRepository;
 import com.coresaken.JokeApp.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +23,7 @@ public class CreateJokeListService {
 
     final JokeListRepository jokeListRepository;
 
-    public ResponseEntity<ResponseContent<JokeListDto>> create(com.coresaken.JokeApp.data.dto.JokeListDto jokeListDto) {
+    public ResponseEntity<ResponseContent<JokeListDto>> create(com.coresaken.JokeApp.data.dto.JokeListDto jokeListDto, HttpServletRequest request) {
         String name = jokeListDto.getName().trim();
         JokeList.VisibilityType visibilityType = jokeListDto.getVisibilityType();
         if(visibilityType == null){
@@ -37,7 +39,7 @@ public class CreateJokeListService {
 
         User user = userService.getLoggedUser();
         if (user == null) {
-            return ResponseEntity.badRequest().body(ResponseContent.buildError(2, "Twoja sesja wygasła. Zaloguj się ponownie"));
+            return new ResponseEntity<>(ResponseContent.buildError(2, "Twoja sesja wygasła. Zaloguj się ponownie"), HttpStatus.UNAUTHORIZED);
         }
 
         JokeList jokeList = new JokeList();
@@ -57,7 +59,7 @@ public class CreateJokeListService {
                 }
             }
         }
-        return ResponseEntity.ok(ResponseContent.buildSuccess(JokeListDto.build(user, jokeList)));
+        return ResponseEntity.ok(ResponseContent.buildSuccess(JokeListDto.build(user, jokeList, request)));
     }
 
     private boolean isUuidConflictException(DataIntegrityViolationException e) {

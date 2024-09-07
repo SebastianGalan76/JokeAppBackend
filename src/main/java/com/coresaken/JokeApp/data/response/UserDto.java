@@ -2,6 +2,7 @@ package com.coresaken.JokeApp.data.response;
 
 import com.coresaken.JokeApp.database.model.JokeList;
 import com.coresaken.JokeApp.database.model.User;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,7 @@ public class UserDto {
     User.Role role;
     List<JokeListDto> jokeLists;
 
-    public static UserDto build(User user){
+    public static UserDto build(User user, HttpServletRequest request){
         if(user==null){
             return null;
         }
@@ -32,7 +33,7 @@ public class UserDto {
         userDto.setEmail(user.getEmail());
         userDto.setRole(user.getRole());
 
-        userDto.setJokeLists(user.getJokeLists().stream().map(jokeList -> JokeListDto.build(user, jokeList)).toList());
+        userDto.setJokeLists(user.getJokeLists().stream().map(jokeList -> JokeListDto.build(user, jokeList, request)).toList());
         return userDto;
     }
 }

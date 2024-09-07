@@ -4,6 +4,7 @@ import com.coresaken.JokeApp.database.model.JokeList;
 import com.coresaken.JokeApp.database.model.User;
 import com.coresaken.JokeApp.database.model.joke.Joke;
 import jakarta.persistence.*;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,7 @@ public class JokeListDto {
     JokeList.VisibilityType visibilityType;
     Set<JokeDto> jokes = new HashSet<>();
 
-    public static JokeListDto build(User loggedInUser, JokeList jokeList){
+    public static JokeListDto build(User loggedInUser, JokeList jokeList, HttpServletRequest request){
         JokeListDto jokeListDto = new JokeListDto();
 
         jokeListDto.setId(jokeList.getId());
@@ -33,7 +34,7 @@ public class JokeListDto {
         jokeListDto.setUuid(jokeList.getUuid());
         jokeListDto.setVisibilityType(jokeList.getVisibilityType());
 
-        jokeListDto.setJokes(jokeList.getJokes().stream().map(joke -> JokeDto.build(loggedInUser, joke, null)).collect(Collectors.toSet()));
+        jokeListDto.setJokes(jokeList.getJokes().stream().map(joke -> JokeDto.build(loggedInUser, joke, request.getRemoteAddr())).collect(Collectors.toSet()));
         return jokeListDto;
     }
 }
