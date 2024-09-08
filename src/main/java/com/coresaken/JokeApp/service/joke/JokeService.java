@@ -40,7 +40,7 @@ public class JokeService {
 
         Pageable pageable = PageRequest.of(page, 15);
 
-        Page<Joke> jokes = jokeRepository.findByCategory(category, pageable);
+        Page<Joke> jokes = jokeRepository.findByCategories(category, pageable);
         Page<JokeDto> jokeDtoPage = jokes.map(joke -> JokeDto.build(user, joke, request.getRemoteAddr()));
 
         PageResponse<JokeDto> jokeResponse = new PageResponse<>();

@@ -26,7 +26,7 @@ public class JokeDto {
     Joke.Type type;
     Joke.Kind kind;
 
-    Category category;
+    List<Category> categories;
     Owner owner;
 
     LocalDateTime createdAt;
@@ -74,7 +74,7 @@ public class JokeDto {
         jokeDto.setContent(joke.getContent());
         jokeDto.setCharCount(joke.getCharCount());
         jokeDto.setStatus(joke.getStatus());
-        jokeDto.setCategory(joke.getCategory());
+        jokeDto.setCategories(joke.getCategories());
         jokeDto.setOwner(joke.getUser() != null ? new Owner(joke.getUser().getId(), joke.getUser().getLogin()) : null);
         jokeDto.setCreatedAt(joke.getCreatedAt());
         jokeDto.setType(joke.getType());

@@ -10,11 +10,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface JokeRepository extends JpaRepository<Joke, Long> {
-    Page<Joke> findByCategory(Category category, Pageable pageable);
+    Page<Joke> findByCategories(Category category, Pageable pageable);
 
     @Query(value = "SELECT * FROM joke ORDER BY random() LIMIT :amount", nativeQuery = true)
     List<Joke> findRandomJokes(@Param("amount") int amount);

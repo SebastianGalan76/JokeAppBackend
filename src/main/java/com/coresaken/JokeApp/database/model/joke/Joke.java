@@ -29,10 +29,6 @@ public class Joke {
     StatusType status;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
-    Category category;
-
-    @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
 
@@ -43,6 +39,14 @@ public class Joke {
     Kind kind;
 
     LocalDateTime createdAt;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "joke_category",
+            joinColumns = @JoinColumn(name = "joke_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    List<Category> categories;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     RejectionReason rejectionReason;

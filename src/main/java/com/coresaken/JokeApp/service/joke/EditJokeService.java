@@ -19,6 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class EditJokeService {
@@ -43,54 +46,34 @@ public class EditJokeService {
         Joke.Type type = Joke.Type.valueOf(jokeDto.getType() == null || jokeDto.getType().isBlank() ? "JOKE" : "RUSK");
         Joke.Kind kind = Joke.Kind.valueOf(jokeDto.getKind() == null || jokeDto.getKind().isBlank() ? "TRADITIONAL" : "ENIGMATIC");
 
+        assert joke != null;
+
         if(PermissionChecker.hasPermission(user, User.Role.HELPER)){
-            return editByStaff(joke, jokeDto.getCategory(), content, type, kind);
+            return editByStaff(joke, jokeDto.getCategories(), content, type, kind);
         }
         else{
-            return editByUser(user, joke, jokeDto.getCategory(), content, type, kind);
+            return editByUser(user, joke, jokeDto.getCategories(), content, type, kind);
         }
     }
 
-    private ResponseEntity<Response> editByUser(User user, Joke joke, Category newCategory, String content, Joke.Type type, Joke.Kind kind) {
-        Category savedCategory;
-        if(newCategory != null){
-             savedCategory = categoryRepository.findById(newCategory.getId()).orElse(null);
+    private ResponseEntity<Response> editByUser(User user, Joke joke, List<Category> categories, String content, Joke.Type type, Joke.Kind kind) {
+        List<Category> savedCategories = new ArrayList<>();
+        if(categories != null){
+             for(Category category:categories){
+                 Category savedCategory = categoryRepository.findById(category.getId()).orElse(null);
 
-            if(savedCategory == null){
-                return ErrorResponse.build(3, "There is no category with given ID");
-            }
-        }
-        else{
-            savedCategory = null;
+                 if(savedCategory != null){
+                     savedCategories.add(savedCategory);
+                 }
+             }
         }
 
-        editedJokeService.create(joke, user, savedCategory, content, type, kind);
+        editedJokeService.edit(joke, user, savedCategories, content, type, kind);
 
         return new ResponseEntity<>(Response.builder().status(ResponseStatusEnum.SUCCESS).build(), HttpStatus.OK);
     }
-    private ResponseEntity<Response> editByStaff(Joke joke, Category newCategory, String content, Joke.Type type, Joke.Kind kind) {
-        if(newCategory != null){
-            Category savedCategory = categoryRepository.findById(newCategory.getId()).orElse(null);
-
-            if(savedCategory == null){
-                return ErrorResponse.build(3, "There is no category with given ID");
-            }
-
-            //Category of the joke has been changed
-            if(!savedCategory.equals(joke.getCategory())){
-                joke.getCategory().changeJokeAmount(-1);
-                joke.setCategory(savedCategory);
-
-                savedCategory.changeJokeAmount(1);
-            }
-        }
-        else{
-            Category jokeCategory = joke.getCategory();
-            if(jokeCategory != null){
-                jokeCategory.changeJokeAmount(-1);
-                joke.setCategory(null);
-            }
-        }
+    private ResponseEntity<Response> editByStaff(Joke joke, List<Category> categories, String content, Joke.Type type, Joke.Kind kind) {
+        updateCategoryJokeAmount(joke.getCategories(), categories);
 
         joke.setType(type);
         joke.setKind(kind);
@@ -113,5 +96,18 @@ public class EditJokeService {
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    public void updateCategoryJokeAmount(List<Category> oldList, List<Category> newList) {
+        List<Category> toRemove = oldList.stream()
+                .filter(category -> !newList.contains(category))
+                .toList();
+
+        List<Category> toAdd = newList.stream()
+                .filter(category -> !oldList.contains(category))
+                .toList();
+
+        toRemove.forEach(category -> category.changeJokeAmount(-1));
+        toAdd.forEach(category -> category.changeJokeAmount(1));
     }
 }

@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -20,9 +22,13 @@ public class EditedJoke {
     @JoinColumn(name = "joke_id")
     Joke joke;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    Category category;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "edited_joke_category",
+            joinColumns = @JoinColumn(name = "edited_joke_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    List<Category> categories;
 
     @Column(length = 5000)
     String content;

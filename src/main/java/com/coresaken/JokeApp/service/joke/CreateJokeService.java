@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -50,16 +52,22 @@ public class CreateJokeService {
             joke.setStatus(Joke.StatusType.NOT_VERIFIED);
         }
 
-        Category category = jokeDto.getCategory();
-        if(category != null){
-            Category savedCategory = categoryRepository.findById(jokeDto.getCategory().getId()).orElse(null);
-
-            if(savedCategory == null){
-                return ErrorResponse.build(3, "There is no category with given ID");
+        List<Category> categories = jokeDto.getCategories();
+        if(categories != null){
+            if(joke.getCategories() == null){
+                joke.setCategories(new ArrayList<>());
             }
 
-            joke.setCategory(savedCategory);
-            savedCategory.changeJokeAmount(1);
+            for(Category category: categories){
+                Category savedCategory = categoryRepository.findById(category.getId()).orElse(null);
+
+                if(savedCategory == null){
+                    return ErrorResponse.build(3, "There is no category with given ID");
+                }
+
+                joke.getCategories().add(savedCategory);
+                savedCategory.changeJokeAmount(1);
+            }
         }
 
         Joke.Type type = Joke.Type.valueOf(jokeDto.getType() == null || jokeDto.getType().isBlank() ? "JOKE" : "RUSK");

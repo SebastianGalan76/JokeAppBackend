@@ -6,6 +6,7 @@ import com.coresaken.JokeApp.database.model.User;
 import com.coresaken.JokeApp.database.model.category.Category;
 import com.coresaken.JokeApp.database.model.joke.EditedJoke;
 import com.coresaken.JokeApp.database.model.joke.Joke;
+import com.coresaken.JokeApp.database.repository.joke.CategoryRepository;
 import com.coresaken.JokeApp.database.repository.joke.EditedJokeRepository;
 import com.coresaken.JokeApp.database.repository.joke.JokeRepository;
 import com.coresaken.JokeApp.service.UserService;
@@ -17,6 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class EditedJokeService {
@@ -24,8 +28,9 @@ public class EditedJokeService {
 
     final EditedJokeRepository editedJokeRepository;
     final JokeRepository jokeRepository;
+    final CategoryRepository categoryRepository;
 
-    public void create(Joke joke, User user, Category category, String content, Joke.Type type, Joke.Kind kind){
+    public void edit(Joke joke, User user, List<Category> categories, String content, Joke.Type type, Joke.Kind kind){
         EditedJoke editedJoke = editedJokeRepository.findByJoke(joke);
         if(editedJoke == null){
             editedJoke = new EditedJoke();
@@ -35,7 +40,10 @@ public class EditedJokeService {
 
         editedJoke.setJoke(joke);
         editedJoke.setUser(user);
-        editedJoke.setCategory(category);
+
+        editedJoke.getCategories().clear();
+        editedJoke.setCategories(categories);
+
         editedJoke.setContent(content);
         editedJokeRepository.save(editedJoke);
     }
@@ -54,18 +62,21 @@ public class EditedJokeService {
         Joke joke = editedJoke.getJoke();
         joke.setContent(editedJoke.getContent());
 
-        Category currentCategory = joke.getCategory();
-        Category newCategory = editedJoke.getCategory();
+        updateCategoryJokeAmount(joke.getCategories(), editedJoke.getCategories());
+        List<Category> categories = editedJoke.getCategories();
+        List<Category> savedCategories = new ArrayList<>();
 
-        if(currentCategory!=null && !currentCategory.equals(newCategory)){
-            currentCategory.changeJokeAmount(-1);
+        if(categories != null){
+            for(Category category:categories){
+                Category savedCategory = categoryRepository.findById(category.getId()).orElse(null);
+
+                if(savedCategory != null){
+                    savedCategories.add(savedCategory);
+                }
+            }
         }
 
-        if(newCategory!=null){
-            newCategory.changeJokeAmount(1);
-        }
-
-        joke.setCategory(newCategory);
+        joke.setCategories(savedCategories);
         editedJokeRepository.delete(editedJoke);
         jokeRepository.save(joke);
         return new ResponseEntity<>(Response.builder().status(ResponseStatusEnum.SUCCESS).build(), HttpStatus.OK);
@@ -101,5 +112,18 @@ public class EditedJokeService {
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    public void updateCategoryJokeAmount(List<Category> oldList, List<Category> newList) {
+        List<Category> toRemove = oldList.stream()
+                .filter(category -> !newList.contains(category))
+                .toList();
+
+        List<Category> toAdd = newList.stream()
+                .filter(category -> !oldList.contains(category))
+                .toList();
+
+        toRemove.forEach(category -> category.changeJokeAmount(-1));
+        toAdd.forEach(category -> category.changeJokeAmount(1));
     }
 }

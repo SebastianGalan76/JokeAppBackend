@@ -55,7 +55,7 @@ public class JokeServiceTest {
         Page<Joke> jokesPage = new PageImpl<>(List.of(joke));
 
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
-        when(jokeRepository.findByCategory(category, PageRequest.of(page, 15))).thenReturn(jokesPage);
+        when(jokeRepository.findByCategories(category, PageRequest.of(page, 15))).thenReturn(jokesPage);
         when(userService.getLoggedUser()).thenReturn(null);
 
         ResponseEntity<PageResponse<JokeDto>> responseEntity = jokeService.getJokesByCategory(categoryId, page, null);

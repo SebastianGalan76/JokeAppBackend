@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class DeleteJokeService {
@@ -37,10 +39,9 @@ public class DeleteJokeService {
         }
 
         assert joke != null;
-        Category category = joke.getCategory();
-        if(category != null){
-            category.changeJokeAmount(-1);
-        }
+        List<Category> categories = joke.getCategories();
+        categories.forEach(category -> category.changeJokeAmount(-1));
+
         jokeRepository.delete(joke);
 
         return new ResponseEntity<>(Response.builder().status(ResponseStatusEnum.SUCCESS).build(), HttpStatus.OK);
