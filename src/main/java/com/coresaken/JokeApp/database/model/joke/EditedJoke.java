@@ -22,7 +22,7 @@ public class EditedJoke {
     @JoinColumn(name = "joke_id")
     Joke joke;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "edited_joke_category",
             joinColumns = @JoinColumn(name = "edited_joke_id"),

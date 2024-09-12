@@ -43,8 +43,8 @@ public class EditJokeService {
         if(verificationRequirementsResponse.getStatusCode() != HttpStatus.OK){
             return verificationRequirementsResponse;
         }
-        Joke.Type type = Joke.Type.valueOf(jokeDto.getType() == null || jokeDto.getType().isBlank() ? "JOKE" : "RUSK");
-        Joke.Kind kind = Joke.Kind.valueOf(jokeDto.getKind() == null || jokeDto.getKind().isBlank() ? "TRADITIONAL" : "ENIGMATIC");
+        Joke.Type type = Joke.Type.valueOf((jokeDto.getType() == null || jokeDto.getType().isBlank()) ? "JOKE" : jokeDto.getType());
+        Joke.Kind kind = Joke.Kind.valueOf((jokeDto.getKind() == null || jokeDto.getKind().isBlank()) ? "TRADITIONAL" : jokeDto.getKind());
 
         assert joke != null;
 

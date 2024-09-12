@@ -40,7 +40,7 @@ public class Joke {
 
     LocalDateTime createdAt;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "joke_category",
             joinColumns = @JoinColumn(name = "joke_id"),

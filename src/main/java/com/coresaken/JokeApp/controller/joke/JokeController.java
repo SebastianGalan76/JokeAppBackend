@@ -32,7 +32,6 @@ public class JokeController {
 
     @GetMapping("/joke/category/{id}/{page}")
     public ResponseEntity<PageResponse<JokeDto>> getJokesByCategory(@PathVariable("id") Long id, @PathVariable("page") int page, HttpServletRequest request){
-        System.out.println("S1");
         return jokeService.getJokesByCategory(id, page, request);
     }
 

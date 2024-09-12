@@ -41,7 +41,6 @@ public class EditedJokeService {
         editedJoke.setJoke(joke);
         editedJoke.setUser(user);
 
-        editedJoke.getCategories().clear();
         editedJoke.setCategories(categories);
 
         editedJoke.setContent(content);

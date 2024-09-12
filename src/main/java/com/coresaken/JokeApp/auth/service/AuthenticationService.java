@@ -98,7 +98,7 @@ public class AuthenticationService {
             return ErrorResponse.build(2, "Incorrect login details");
         }
 
-        if (activeAccountService.isAccountActivated(user)) {
+        if (!activeAccountService.isAccountActivated(user)) {
             return ErrorResponse.build(3, "This account is not active yet");
         }
 
