@@ -63,7 +63,7 @@ public class Joke {
     @OneToMany(mappedBy = "joke", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     List<FavoriteJoke> favorites;
 
-    @ManyToMany(mappedBy = "jokes", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "jokes", fetch = FetchType.EAGER)
     List<JokeList> jokeLists;
 
     int likeAmount = 0;
@@ -79,6 +79,13 @@ public class Joke {
         dislikeAmount += value;
         if(dislikeAmount < 0){
             dislikeAmount = 0;
+        }
+    }
+
+    @PreRemove
+    public void preRemove() {
+        for (JokeList jokeList : jokeLists) {
+            jokeList.getJokes().remove(this);
         }
     }
 

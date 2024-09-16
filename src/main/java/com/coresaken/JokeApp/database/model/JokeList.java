@@ -27,7 +27,7 @@ public class JokeList {
     @Enumerated(EnumType.STRING)
     VisibilityType visibilityType;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "joke_list_jokes",
             joinColumns = @JoinColumn(name = "joke_list_id"),
