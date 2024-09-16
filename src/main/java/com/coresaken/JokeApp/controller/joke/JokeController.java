@@ -39,4 +39,9 @@ public class JokeController {
     public ResponseContent<List<JokeDto>> getRandomJokes(@RequestParam("amount") int amount, HttpServletRequest request){
         return jokeService.getRandomJokes(amount, request);
     }
+
+    @GetMapping("/jokes/best")
+    public PageResponse<JokeDto> getBestJokes(@RequestParam int page, HttpServletRequest request){
+        return jokeService.getBestJokes(page, request);
+    }
 }

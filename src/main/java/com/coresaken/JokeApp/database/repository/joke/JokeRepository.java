@@ -17,4 +17,7 @@ public interface JokeRepository extends JpaRepository<Joke, Long> {
 
     @Query(value = "SELECT * FROM joke ORDER BY random() LIMIT :amount", nativeQuery = true)
     List<Joke> findRandomJokes(@Param("amount") int amount);
+
+    @Query("SELECT j FROM Joke j ORDER BY (j.likeAmount - j.dislikeAmount) DESC")
+    Page<Joke> findBestJokes(Pageable pageable);
 }

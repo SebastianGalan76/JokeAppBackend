@@ -98,4 +98,18 @@ public class JokeService {
 
         return responseContent;
     }
+
+    public PageResponse<JokeDto> getBestJokes(int page, HttpServletRequest request) {
+        User user = userService.getLoggedUser();
+        Pageable pageable = PageRequest.of(page, 15, Sort.by("id").descending());
+
+        Page<Joke> jokes = jokeRepository.findBestJokes(pageable);
+        Page<JokeDto> jokeDtoPage = jokes.map(joke -> JokeDto.build(user, joke, request.getRemoteAddr()));
+
+        PageResponse<JokeDto> jokeResponse = new PageResponse<>();
+        jokeResponse.setStatus(ResponseStatusEnum.SUCCESS);
+        jokeResponse.setContent(jokeDtoPage);
+
+        return jokeResponse;
+    }
 }
