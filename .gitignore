@@ -7,6 +7,9 @@ build/
 
 /src/main/resources/application.properties
 
+/src/main/java/com/coresaken/JokeApp/service/AddJokesFromFileService.java
+/src/main/resources/jokes_with_categories.json
+
 ### STS ###
 .apt_generated
 .classpath

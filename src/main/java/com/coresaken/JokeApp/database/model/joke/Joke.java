@@ -20,7 +20,7 @@ public class Joke {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(length = 5000)
+    @Column(length = 50000)
     String content;
 
     int charCount;
@@ -68,6 +68,14 @@ public class Joke {
 
     int likeAmount = 0;
     int dislikeAmount = 0;
+
+    public Joke(String content, Type type, Kind kind){
+        this.content = content;
+        this.type = type;
+        this.kind = kind;
+
+        this.charCount = content.length();
+    }
 
     public void changeLikeAmount(int value){
         likeAmount += value;

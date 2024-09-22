@@ -23,6 +23,12 @@ public class Category {
 
     int jokeAmount;
 
+    public Category(String name, String url){
+        this.name = name;
+        this.url = url;
+        jokeAmount = 0;
+    }
+
     public void changeJokeAmount(int value){
         jokeAmount+=value;
         if(jokeAmount<0){
