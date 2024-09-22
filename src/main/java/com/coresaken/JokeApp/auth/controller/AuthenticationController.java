@@ -7,6 +7,8 @@ import com.coresaken.JokeApp.auth.dto.response.AuthenticationResponse;
 import com.coresaken.JokeApp.auth.service.ActiveAccountService;
 import com.coresaken.JokeApp.auth.service.AuthenticationService;
 import com.coresaken.JokeApp.auth.service.ResetPasswordService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,5 +45,10 @@ public class AuthenticationController {
     @PostMapping("/resetPassword")
     public ResponseEntity<AuthenticationResponse> resetPassword(@RequestBody ResetPasswordDto resetPasswordDto) {
         return resetPasswordService.resetPassword(resetPasswordDto);
+    }
+
+    @PostMapping("/logout")
+    public void resetPassword(HttpServletRequest request, HttpServletResponse response) {
+        service.logout(request, response);
     }
 }

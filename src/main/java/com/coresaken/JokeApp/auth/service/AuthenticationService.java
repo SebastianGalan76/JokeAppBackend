@@ -91,15 +91,15 @@ public class AuthenticationService {
 
         User user = userRepository.findByEmailOrLogin(identifier, identifier).orElse(null);
         if (user == null) {
-            return ErrorResponse.build(1, "Incorrect login details");
+            return ErrorResponse.build(1, "Niepoprawne dane logowania");
         }
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            return ErrorResponse.build(2, "Incorrect login details");
+            return ErrorResponse.build(2, "Niepoprawne dane logowania");
         }
 
         if (!activeAccountService.isAccountActivated(user)) {
-            return ErrorResponse.build(3, "This account is not active yet");
+            return ErrorResponse.build(3, "Te konto nie zostało aktywowane. Sprawdź swoją pocztę, aby aktywować konto");
         }
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
