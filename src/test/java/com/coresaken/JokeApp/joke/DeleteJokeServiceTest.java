@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,7 +43,7 @@ public class DeleteJokeServiceTest {
         Long jokeId = 1L;
         Joke joke = new Joke();
         joke.setId(jokeId);
-        joke.setCategory(category);
+        joke.setCategories(List.of(category));
         when(jokeRepository.findById(jokeId)).thenReturn(Optional.of(joke));
 
         User user = new User();
@@ -52,7 +53,7 @@ public class DeleteJokeServiceTest {
         ResponseEntity<Response> responseEntity = deleteJokeService.delete(jokeId);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        assertNotNull(joke.getCategory());
+        assertNotNull(joke.getCategories());
         assertEquals(99, category.getJokeAmount());
         verify(jokeRepository).delete(joke);
     }
@@ -65,7 +66,7 @@ public class DeleteJokeServiceTest {
         Long jokeId = 1L;
         Joke joke = new Joke();
         joke.setId(jokeId);
-        joke.setCategory(category);
+        joke.setCategories(List.of(category));
         when(jokeRepository.findById(jokeId)).thenReturn(Optional.of(joke));
 
         User user = new User();
@@ -75,7 +76,7 @@ public class DeleteJokeServiceTest {
         ResponseEntity<Response> responseEntity = deleteJokeService.delete(jokeId);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
-        assertNotNull(joke.getCategory());
+        assertNotNull(joke.getCategories());
         assertEquals(100, category.getJokeAmount());
         verify(jokeRepository, never()).delete(joke);
     }

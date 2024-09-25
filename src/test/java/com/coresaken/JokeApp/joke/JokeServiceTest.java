@@ -8,6 +8,7 @@ import com.coresaken.JokeApp.database.repository.joke.CategoryRepository;
 import com.coresaken.JokeApp.database.repository.joke.JokeRepository;
 import com.coresaken.JokeApp.service.UserService;
 import com.coresaken.JokeApp.service.joke.JokeService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
@@ -58,7 +60,10 @@ public class JokeServiceTest {
         when(jokeRepository.findByCategories(category, PageRequest.of(page, 15))).thenReturn(jokesPage);
         when(userService.getLoggedUser()).thenReturn(null);
 
-        ResponseEntity<PageResponse<JokeDto>> responseEntity = jokeService.getJokesByCategory(categoryId, page, null);
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getRemoteAddr()).thenReturn("127.0.0.1");
+
+        ResponseEntity<PageResponse<JokeDto>> responseEntity = jokeService.getJokesByCategory(categoryId, page, request);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         PageResponse<JokeDto> response = responseEntity.getBody();

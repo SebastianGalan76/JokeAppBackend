@@ -96,7 +96,7 @@ public class CreateJokeServiceTest {
         assertEquals(0, savedJoke.getLikeAmount());
         assertEquals(0, savedJoke.getDislikeAmount());
         assertEquals(Joke.StatusType.ACCEPTED, savedJoke.getStatus());
-        assertNull(savedJoke.getCategory());
+        assertNull(savedJoke.getCategories());
     }
     @Test
     public void create_UserWithUserRole(){
@@ -129,6 +129,6 @@ public class CreateJokeServiceTest {
         assertEquals(0, savedJoke.getLikeAmount());
         assertEquals(0, savedJoke.getDislikeAmount());
         assertEquals(Joke.StatusType.NOT_VERIFIED, savedJoke.getStatus());
-        assertNull(savedJoke.getCategory());
+        assertNull(savedJoke.getCategories());
     }
 }

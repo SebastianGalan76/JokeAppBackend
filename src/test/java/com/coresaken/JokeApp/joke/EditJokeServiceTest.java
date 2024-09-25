@@ -18,6 +18,8 @@ import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -56,7 +58,7 @@ public class EditJokeServiceTest {
 
         JokeDto jokeDto = new JokeDto();
         jokeDto.setContent(newContent);
-        jokeDto.setCategory(null);
+        jokeDto.setCategories(null);
 
         Long jokeId = 1L;
         Joke joke = new Joke();
@@ -64,7 +66,7 @@ public class EditJokeServiceTest {
 
         Category category = new Category();
         category.setJokeAmount(100);
-        joke.setCategory(category);
+        joke.setCategories(List.of(category));
 
         when(jokeRepository.findById(jokeId)).thenReturn(Optional.of(joke));
 
@@ -94,7 +96,7 @@ public class EditJokeServiceTest {
         Category newCategory = new Category();
         newCategory.setId(newCategoryId);
         newCategory.setJokeAmount(100);
-        jokeDto.setCategory(newCategory);
+        jokeDto.setCategories(List.of(newCategory));
 
         Long jokeId = 1L;
         Joke joke = new Joke();
@@ -102,7 +104,7 @@ public class EditJokeServiceTest {
 
         Category category = new Category();
         category.setJokeAmount(100);
-        joke.setCategory(category);
+        joke.setCategories(List.of(category));
 
         when(jokeRepository.findById(jokeId)).thenReturn(Optional.of(joke));
 
@@ -116,7 +118,7 @@ public class EditJokeServiceTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         assertEquals(99, category.getJokeAmount());
-        assertEquals(101, joke.getCategory().getJokeAmount());
+        assertEquals(101, newCategory.getJokeAmount());
         assertEquals(newContent, joke.getContent());
     }
 
@@ -129,7 +131,7 @@ public class EditJokeServiceTest {
         String newContent = "Funny Joke";
         JokeDto jokeDto = new JokeDto();
         jokeDto.setContent(newContent);
-        jokeDto.setCategory(null);
+        jokeDto.setCategories(null);
 
         Long jokeId = 1L;
         String currentContent = "Current Funny Joke";
@@ -139,7 +141,7 @@ public class EditJokeServiceTest {
 
         Category category = new Category();
         category.setJokeAmount(100);
-        joke.setCategory(category);
+        joke.setCategories(List.of(category));
 
         when(jokeRepository.findById(jokeId)).thenReturn(Optional.of(joke));
 
@@ -152,8 +154,7 @@ public class EditJokeServiceTest {
 
         assertEquals(100, category.getJokeAmount());
         assertEquals(currentContent, joke.getContent());
-        assertEquals(category, joke.getCategory());
 
-        verify(editedJokeService).edit(joke, user, null, newContent, Joke.Type.JOKE, Joke.Kind.TRADITIONAL);
+        verify(editedJokeService).edit(joke, user, new ArrayList<>(), newContent, Joke.Type.JOKE, Joke.Kind.TRADITIONAL);
     }
 }

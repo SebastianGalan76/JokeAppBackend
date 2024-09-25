@@ -99,15 +99,21 @@ public class EditJokeService {
     }
 
     public void updateCategoryJokeAmount(List<Category> oldList, List<Category> newList) {
-        List<Category> toRemove = oldList.stream()
-                .filter(category -> !newList.contains(category))
-                .toList();
+        if(newList == null || newList.isEmpty()){
+            oldList.forEach(category -> category.changeJokeAmount(-1));
+        }
+        else{
 
-        List<Category> toAdd = newList.stream()
-                .filter(category -> !oldList.contains(category))
-                .toList();
+            List<Category> toRemove = oldList.stream()
+                    .filter(category -> !newList.contains(category))
+                    .toList();
 
-        toRemove.forEach(category -> category.changeJokeAmount(-1));
-        toAdd.forEach(category -> category.changeJokeAmount(1));
+            List<Category> toAdd = newList.stream()
+                    .filter(category -> !oldList.contains(category))
+                    .toList();
+
+            toRemove.forEach(category -> category.changeJokeAmount(-1));
+            toAdd.forEach(category -> category.changeJokeAmount(1));
+        }
     }
 }

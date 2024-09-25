@@ -42,8 +42,10 @@ public class JokeDto {
     public static JokeDto build(User loggedInUser, Joke joke, String ip){
         JokeDto jokeDto = build(joke);
 
-        Optional<Rating> userRating = joke.getRatings().stream().filter(rating -> (rating.getUser() != null && rating.getUser().equals(loggedInUser)) || (loggedInUser == null && rating.getUserIp().equals(ip))).findFirst();
-        userRating.ifPresent(rating -> jokeDto.setUserRating(rating.getReactionType() == Rating.ReactionType.LIKE ? 1 : -1));
+        if(joke.getRatings() != null){
+            Optional<Rating> userRating = joke.getRatings().stream().filter(rating -> (rating.getUser() != null && rating.getUser().equals(loggedInUser)) || (loggedInUser == null && rating.getUserIp().equals(ip))).findFirst();
+            userRating.ifPresent(rating -> jokeDto.setUserRating(rating.getReactionType() == Rating.ReactionType.LIKE ? 1 : -1));
+        }
 
         if(loggedInUser == null){
             return jokeDto;

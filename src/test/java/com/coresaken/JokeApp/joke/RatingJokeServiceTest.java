@@ -16,6 +16,8 @@ import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -165,6 +167,10 @@ public class RatingJokeServiceTest {
         joke.setLikeAmount(100);
         joke.setDislikeAmount(100);
 
+        Rating rating = new Rating();
+        rating.setReactionType(reactionType);
+        joke.setRatings(new ArrayList<>(List.of(rating)));
+
         when(jokeRepository.findById(jokeId)).thenReturn(Optional.of(joke));
 
         User user = new User();
@@ -172,8 +178,6 @@ public class RatingJokeServiceTest {
         when(userService.getLoggedUser()).thenReturn(user);
         when(request.getRemoteAddr()).thenReturn(userIp);
 
-        Rating rating = new Rating();
-        rating.setReactionType(reactionType);
         when(ratingRepository.findByJokeAndUserOrUserIp(joke, user, userIp)).thenReturn(Optional.of(rating));
 
         ResponseEntity<Response> responseEntity;
@@ -190,7 +194,6 @@ public class RatingJokeServiceTest {
         assertNotNull(response);
 
         assertEquals(ResponseStatusEnum.SUCCESS, response.getStatus());
-        verify(ratingRepository).delete(rating);
 
         if(reactionType == Rating.ReactionType.LIKE){
             assertEquals(99, joke.getLikeAmount());

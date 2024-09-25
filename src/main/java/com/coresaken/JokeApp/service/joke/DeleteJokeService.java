@@ -56,7 +56,7 @@ public class DeleteJokeService {
             return ErrorResponse.build(2, "Your session has been expired", HttpStatus.UNAUTHORIZED);
         }
 
-        if(!PermissionChecker.hasPermission(user, User.Role.HELPER) && (joke.getUser()!= null && !joke.getUser().equals(user))){
+        if(!PermissionChecker.hasPermission(user, User.Role.HELPER) || (joke.getUser()!= null && !joke.getUser().equals(user))){
             return ErrorResponse.build(3, "You don't have required permission", HttpStatus.BAD_REQUEST);
         }
 

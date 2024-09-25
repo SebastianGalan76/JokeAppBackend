@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -43,9 +44,12 @@ public class RateJokeService {
             if(rating != null){
                 //Delete existing like
                 if(rating.getReactionType() == Rating.ReactionType.LIKE){
-                    joke.getRatings().remove(rating);
-                    ratingRepository.delete(rating);
-                    joke.changeLikeAmount(-1);
+                    List<Rating> ratings = joke.getRatings();
+                    if(ratings!=null){
+                        ratings.remove(rating);
+                        ratingRepository.delete(rating);
+                        joke.changeLikeAmount(-1);
+                    }
                 }
                 //Change dislike to like
                 else{
@@ -81,11 +85,14 @@ public class RateJokeService {
             if(rating != null){
                 //Delete existing dislike
                 if(rating.getReactionType() == Rating.ReactionType.DISLIKE){
-                    joke.getRatings().remove(rating);
-                    ratingRepository.delete(rating);
-                    ratingRepository.flush();
+                    List<Rating> ratings = joke.getRatings();
+                    if(ratings!=null){
+                        ratings.remove(rating);
+                        ratingRepository.delete(rating);
+                        ratingRepository.flush();
 
-                    joke.changeDislikeAmount(-1);
+                        joke.changeDislikeAmount(-1);
+                    }
                 }
                 //Change like to dislike
                 else{

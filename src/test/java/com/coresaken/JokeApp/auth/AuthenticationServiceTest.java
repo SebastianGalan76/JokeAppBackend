@@ -5,6 +5,7 @@ import com.coresaken.JokeApp.auth.dto.request.SignUpRequestDto;
 import com.coresaken.JokeApp.auth.dto.response.AuthenticationResponse;
 import com.coresaken.JokeApp.auth.service.ActiveAccountService;
 import com.coresaken.JokeApp.auth.service.AuthenticationService;
+import com.coresaken.JokeApp.auth.service.JwtService;
 import com.coresaken.JokeApp.data.enums.ResponseStatusEnum;
 import com.coresaken.JokeApp.database.model.User;
 import com.coresaken.JokeApp.database.repository.UserRepository;
@@ -13,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -31,6 +33,12 @@ public class AuthenticationServiceTest {
 
     @Mock
     private ActiveAccountService activeAccountService;
+
+    @Mock
+    private AuthenticationManager authenticationManager;
+
+    @Mock
+    private JwtService jwtService;
 
     @InjectMocks
     private AuthenticationService authenticationService;
@@ -144,7 +152,7 @@ public class AuthenticationServiceTest {
 
         when(userRepository.findByEmailOrLogin("test@domain.com", "test@domain.com")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("123qwe", user.getPassword())).thenReturn(true);
-        when(activeAccountService.isAccountActivated(user)).thenReturn(true);
+        when(activeAccountService.isAccountActivated(user)).thenReturn(false);
 
         ResponseEntity<AuthenticationResponse> response = authenticationService.signIn(request);
 

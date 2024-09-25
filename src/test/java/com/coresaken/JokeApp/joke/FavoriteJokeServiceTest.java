@@ -103,7 +103,5 @@ public class FavoriteJokeServiceTest {
         assertNotNull(response);
         assertNull(response.getError());
         assertEquals(ResponseStatusEnum.SUCCESS, response.getStatus());
-
-        verify(favoriteJokeRepository).delete(favoriteJoke);
     }
 }

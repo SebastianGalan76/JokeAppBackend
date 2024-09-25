@@ -6,6 +6,7 @@ import com.coresaken.JokeApp.database.model.User;
 import com.coresaken.JokeApp.database.model.category.Category;
 import com.coresaken.JokeApp.database.model.joke.EditedJoke;
 import com.coresaken.JokeApp.database.model.joke.Joke;
+import com.coresaken.JokeApp.database.repository.joke.CategoryRepository;
 import com.coresaken.JokeApp.database.repository.joke.EditedJokeRepository;
 import com.coresaken.JokeApp.database.repository.joke.JokeRepository;
 import com.coresaken.JokeApp.service.UserService;
@@ -16,6 +17,9 @@ import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,6 +33,9 @@ public class EditedJokeServiceTest {
     private EditedJokeRepository editedJokeRepository;
     @Mock
     private JokeRepository jokeRepository;
+
+    @Mock
+    private CategoryRepository categoryRepository;
 
     @InjectMocks
     private EditedJokeService editedJokeService;
@@ -68,7 +75,7 @@ public class EditedJokeServiceTest {
         Category currentCategory = new Category();
         currentCategory.setId(1L);
         currentCategory.setJokeAmount(100);
-        joke.setCategory(currentCategory);
+        joke.setCategories(new ArrayList<>(List.of(currentCategory)));
 
         Long editedJokeId = 1L;
         String editedJokeContent = "Edited Joke Content";
@@ -80,7 +87,7 @@ public class EditedJokeServiceTest {
         Category newCategory = new Category();
         newCategory.setId(2L);
         newCategory.setJokeAmount(100);
-        editedJoke.setCategory(newCategory);
+        editedJoke.setCategories(new ArrayList<>(List.of(newCategory)));
 
         when(editedJokeRepository.findById(editedJokeId)).thenReturn(Optional.of(editedJoke));
 
@@ -110,7 +117,7 @@ public class EditedJokeServiceTest {
         Category currentCategory = new Category();
         currentCategory.setId(1L);
         currentCategory.setJokeAmount(100);
-        joke.setCategory(currentCategory);
+        joke.setCategories(List.of(currentCategory));
 
         Long editedJokeId = 1L;
         String editedJokeContent = "Edited Joke Content";
@@ -122,7 +129,7 @@ public class EditedJokeServiceTest {
         Category newCategory = new Category();
         newCategory.setId(2L);
         newCategory.setJokeAmount(100);
-        editedJoke.setCategory(newCategory);
+        editedJoke.setCategories(List.of(currentCategory));
 
         when(editedJokeRepository.findById(editedJokeId)).thenReturn(Optional.of(editedJoke));
 
