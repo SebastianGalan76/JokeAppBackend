@@ -13,11 +13,12 @@ import java.util.List;
 
 @Repository
 public interface JokeRepository extends JpaRepository<Joke, Long> {
-    Page<Joke> findByCategories(Category category, Pageable pageable);
+    @Query("SELECT j FROM Joke j JOIN j.categories c WHERE c = :category AND j.status = 'ACCEPTED'")
+    Page<Joke> findByCategoriesAndAccepted(@Param("category") Category category, Pageable pageable);
 
-    @Query(value = "SELECT * FROM joke ORDER BY random() LIMIT :amount", nativeQuery = true)
+    @Query(value = "SELECT * FROM joke WHERE status = 'ACCEPTED' ORDER BY random() LIMIT :amount", nativeQuery = true)
     List<Joke> findRandomJokes(@Param("amount") int amount);
 
-    @Query("SELECT j FROM Joke j ORDER BY (j.likeAmount - j.dislikeAmount) DESC")
+    @Query("SELECT j FROM Joke j WHERE status = 'ACCEPTED' ORDER BY (j.likeAmount - j.dislikeAmount) DESC")
     Page<Joke> findBestJokes(Pageable pageable);
 }

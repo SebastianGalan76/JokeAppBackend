@@ -57,7 +57,7 @@ public class JokeServiceTest {
         Page<Joke> jokesPage = new PageImpl<>(List.of(joke));
 
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
-        when(jokeRepository.findByCategories(category, PageRequest.of(page, 15))).thenReturn(jokesPage);
+        when(jokeRepository.findByCategoriesAndAccepted(category, PageRequest.of(page, 15))).thenReturn(jokesPage);
         when(userService.getLoggedUser()).thenReturn(null);
 
         HttpServletRequest request = mock(HttpServletRequest.class);

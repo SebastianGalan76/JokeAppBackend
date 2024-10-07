@@ -7,6 +7,9 @@ build/
 
 /src/main/resources/application.properties
 
+/src/main/java/com/coresaken/JokeApp/service/DontSleepService.java
+/src/main/java/com/coresaken/JokeApp/controller/DontSleepController.java
+
 /src/main/java/com/coresaken/JokeApp/service/AddJokesFromFileService.java
 /src/main/resources/jokes_with_categories.json
 

@@ -13,10 +13,7 @@ import com.coresaken.JokeApp.service.UserService;
 import com.coresaken.JokeApp.util.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +37,7 @@ public class JokeService {
 
         Pageable pageable = PageRequest.of(page, 15);
 
-        Page<Joke> jokes = jokeRepository.findByCategories(category, pageable);
+        Page<Joke> jokes = jokeRepository.findByCategoriesAndAccepted(category, pageable);
         Page<JokeDto> jokeDtoPage = jokes.map(joke -> JokeDto.build(user, joke, request.getRemoteAddr()));
 
         PageResponse<JokeDto> jokeResponse = new PageResponse<>();
@@ -77,7 +74,7 @@ public class JokeService {
         Pageable pageable = PageRequest.of(page, 15, Sort.by("id").descending());
 
         Page<Joke> jokes = jokeRepository.findAll(pageable);
-        Page<JokeDto> jokeDtoPage = jokes.map(joke -> JokeDto.build(user, joke, request.getRemoteAddr()));
+        Page<JokeDto> jokeDtoPage = filterAndPaginateAcceptedJokes(jokes, user, request.getRemoteAddr(), pageable);
 
         PageResponse<JokeDto> jokeResponse = new PageResponse<>();
         jokeResponse.setStatus(ResponseStatusEnum.SUCCESS);
@@ -111,5 +108,17 @@ public class JokeService {
         jokeResponse.setContent(jokeDtoPage);
 
         return jokeResponse;
+    }
+
+    public Page<JokeDto> filterAndPaginateAcceptedJokes(Page<Joke> jokes, User user, String remoteAddr, Pageable pageable) {
+        List<JokeDto> filteredJokes = jokes.stream()
+                .filter(joke -> joke.getStatus() == Joke.StatusType.ACCEPTED)
+                .map(joke -> JokeDto.build(user, joke, remoteAddr)).toList();
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), filteredJokes.size());
+
+        List<JokeDto> paginatedJokes = filteredJokes.subList(start, end);
+        return new PageImpl<>(paginatedJokes, pageable, filteredJokes.size());
     }
 }
