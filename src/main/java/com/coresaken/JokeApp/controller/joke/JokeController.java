@@ -44,4 +44,9 @@ public class JokeController {
     public PageResponse<JokeDto> getBestJokes(@RequestParam int page, HttpServletRequest request){
         return jokeService.getBestJokes(page, request);
     }
+
+    @GetMapping("/joke/unverified/{page}")
+    public ResponseEntity<PageResponse<JokeDto>> getUnverifiedJokes(@PathVariable("page") int page, HttpServletRequest request){
+        return jokeService.getUnverifiedJokes(page, request);
+    }
 }

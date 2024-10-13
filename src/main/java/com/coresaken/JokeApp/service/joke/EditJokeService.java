@@ -79,6 +79,10 @@ public class EditJokeService {
         joke.setKind(kind);
 
         joke.setContent(content);
+
+        joke.getCategories().clear();
+        joke.setCategories(categories);
+
         return new ResponseEntity<>(Response.builder().status(ResponseStatusEnum.SUCCESS).build(), HttpStatus.OK);
     }
     private ResponseEntity<Response> checkRequirements(Joke joke, User user, String content) {
@@ -100,7 +104,10 @@ public class EditJokeService {
 
     public void updateCategoryJokeAmount(List<Category> oldList, List<Category> newList) {
         if(newList == null || newList.isEmpty()){
-            oldList.forEach(category -> category.changeJokeAmount(-1));
+            oldList.forEach(category -> {
+                category.changeJokeAmount(1);
+                categoryRepository.save(category);
+            });
         }
         else{
 
@@ -112,8 +119,14 @@ public class EditJokeService {
                     .filter(category -> !oldList.contains(category))
                     .toList();
 
-            toRemove.forEach(category -> category.changeJokeAmount(-1));
-            toAdd.forEach(category -> category.changeJokeAmount(1));
+            toRemove.forEach(category -> {
+                category.changeJokeAmount(-1);
+                categoryRepository.save(category);
+            });
+            toAdd.forEach(category -> {
+                category.changeJokeAmount(1);
+                categoryRepository.save(category);
+            });
         }
     }
 }

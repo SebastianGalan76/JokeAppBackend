@@ -74,6 +74,8 @@ public class Joke {
         this.type = type;
         this.kind = kind;
 
+        this.status = StatusType.NOT_VERIFIED;
+
         this.charCount = content.length();
     }
 

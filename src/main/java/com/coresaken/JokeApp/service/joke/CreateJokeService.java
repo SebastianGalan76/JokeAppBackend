@@ -61,12 +61,13 @@ public class CreateJokeService {
             for(Category category: categories){
                 Category savedCategory = categoryRepository.findById(category.getId()).orElse(null);
 
-                if(savedCategory == null){
-                    return ErrorResponse.build(3, "There is no category with given ID");
-                }
+                if(savedCategory != null){
+                    joke.getCategories().add(savedCategory);
 
-                joke.getCategories().add(savedCategory);
-                savedCategory.changeJokeAmount(1);
+                    if(joke.getStatus()== Joke.StatusType.ACCEPTED){
+                        savedCategory.changeJokeAmount(1);
+                    }
+                }
             }
         }
 

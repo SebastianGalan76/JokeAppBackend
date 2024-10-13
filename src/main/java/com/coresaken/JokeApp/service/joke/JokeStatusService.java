@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +42,9 @@ public class JokeStatusService {
         assert joke != null;
         joke.setStatus(Joke.StatusType.ACCEPTED);
         joke.setRejectionReason(null);
+        Optional.ofNullable(joke.getCategories())
+                .ifPresent(categories -> categories.forEach(category -> category.setJokeAmount(1)));
+
         jokeRepository.save(joke);
 
         return new ResponseEntity<>(Response.builder().status(ResponseStatusEnum.SUCCESS).build(), HttpStatus.OK);

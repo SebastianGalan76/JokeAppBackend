@@ -21,4 +21,13 @@ public interface JokeRepository extends JpaRepository<Joke, Long> {
 
     @Query("SELECT j FROM Joke j WHERE status = 'ACCEPTED' ORDER BY (j.likeAmount - j.dislikeAmount) DESC")
     Page<Joke> findBestJokes(Pageable pageable);
+
+    @Query("SELECT j FROM Joke j WHERE j.status = 'NOT_VERIFIED'")
+    Page<Joke> findUnverifiedJokes(Pageable pageable);
+
+    @Query("SELECT j FROM Joke j WHERE j.status = 'ACCEPTED'")
+    Page<Joke> findAccepted(Pageable pageable);
+
+    @Query("SELECT c, COUNT(j) FROM Joke j JOIN j.categories c WHERE j.status = 'ACCEPTED' GROUP BY c")
+    List<Object[]> countAcceptedJokesByCategory();
 }

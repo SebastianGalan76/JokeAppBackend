@@ -122,7 +122,13 @@ public class EditedJokeService {
                 .filter(category -> !oldList.contains(category))
                 .toList();
 
-        toRemove.forEach(category -> category.changeJokeAmount(-1));
-        toAdd.forEach(category -> category.changeJokeAmount(1));
+        toRemove.forEach(category -> {
+            category.changeJokeAmount(-1);
+            categoryRepository.save(category);
+        });
+        toAdd.forEach(category -> {
+            category.changeJokeAmount(1);
+            categoryRepository.save(category);
+        });
     }
 }

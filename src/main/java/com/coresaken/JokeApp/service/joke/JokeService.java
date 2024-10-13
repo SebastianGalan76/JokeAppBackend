@@ -73,9 +73,8 @@ public class JokeService {
         User user = userService.getLoggedUser();
         Pageable pageable = PageRequest.of(page, 15, Sort.by("id").descending());
 
-        Page<Joke> jokes = jokeRepository.findAll(pageable);
+        Page<Joke> jokes = jokeRepository.findAccepted(pageable);
         Page<JokeDto> jokeDtoPage = filterAndPaginateAcceptedJokes(jokes, user, request.getRemoteAddr(), pageable);
-
         PageResponse<JokeDto> jokeResponse = new PageResponse<>();
         jokeResponse.setStatus(ResponseStatusEnum.SUCCESS);
         jokeResponse.setContent(jokeDtoPage);
@@ -111,14 +110,30 @@ public class JokeService {
     }
 
     public Page<JokeDto> filterAndPaginateAcceptedJokes(Page<Joke> jokes, User user, String remoteAddr, Pageable pageable) {
-        List<JokeDto> filteredJokes = jokes.stream()
-                .filter(joke -> joke.getStatus() == Joke.StatusType.ACCEPTED)
-                .map(joke -> JokeDto.build(user, joke, remoteAddr)).toList();
+        List<JokeDto> filteredJokes = jokes.stream().map(joke -> JokeDto.build(user, joke, remoteAddr)).toList();
 
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), filteredJokes.size());
 
         List<JokeDto> paginatedJokes = filteredJokes.subList(start, end);
         return new PageImpl<>(paginatedJokes, pageable, filteredJokes.size());
+    }
+
+    public ResponseEntity<PageResponse<JokeDto>> getUnverifiedJokes(int page, HttpServletRequest request) {
+        User user = userService.getLoggedUser();
+        if(user == null || user.getRole().value < User.Role.HELPER.value){
+            return ResponseEntity.badRequest().body(PageResponse.buildError(1, "Nie masz wymaganych uprawnień"));
+        }
+
+        Pageable pageable = PageRequest.of(page, 15);
+
+        Page<Joke> jokes = jokeRepository.findUnverifiedJokes(pageable);
+        Page<JokeDto> jokeDtoPage = jokes.map(joke -> JokeDto.build(user, joke, request.getRemoteAddr()));
+
+        PageResponse<JokeDto> jokeResponse = new PageResponse<>();
+        jokeResponse.setStatus(ResponseStatusEnum.SUCCESS);
+        jokeResponse.setContent(jokeDtoPage);
+
+        return ResponseEntity.ok(jokeResponse);
     }
 }

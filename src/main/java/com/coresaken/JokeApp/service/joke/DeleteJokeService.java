@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -39,8 +40,10 @@ public class DeleteJokeService {
         }
 
         assert joke != null;
-        List<Category> categories = joke.getCategories();
-        categories.forEach(category -> category.changeJokeAmount(-1));
+        if(joke.getStatus()== Joke.StatusType.ACCEPTED){
+            Optional.ofNullable(joke.getCategories())
+                    .ifPresent(categories -> categories.forEach(category -> category.setJokeAmount(-1)));
+        }
 
         jokeRepository.delete(joke);
 
