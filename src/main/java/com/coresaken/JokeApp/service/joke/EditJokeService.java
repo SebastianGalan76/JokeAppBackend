@@ -79,8 +79,6 @@ public class EditJokeService {
         joke.setKind(kind);
 
         joke.setContent(content);
-
-        joke.getCategories().clear();
         joke.setCategories(categories);
 
         return new ResponseEntity<>(Response.builder().status(ResponseStatusEnum.SUCCESS).build(), HttpStatus.OK);
@@ -105,7 +103,7 @@ public class EditJokeService {
     public void updateCategoryJokeAmount(List<Category> oldList, List<Category> newList) {
         if(newList == null || newList.isEmpty()){
             oldList.forEach(category -> {
-                category.changeJokeAmount(1);
+                category.changeJokeAmount(-1);
                 categoryRepository.save(category);
             });
         }

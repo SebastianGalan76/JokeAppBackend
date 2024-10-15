@@ -43,7 +43,7 @@ public class JokeStatusService {
         joke.setStatus(Joke.StatusType.ACCEPTED);
         joke.setRejectionReason(null);
         Optional.ofNullable(joke.getCategories())
-                .ifPresent(categories -> categories.forEach(category -> category.setJokeAmount(1)));
+                .ifPresent(categories -> categories.forEach(category -> category.changeJokeAmount(1)));
 
         jokeRepository.save(joke);
 

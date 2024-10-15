@@ -77,6 +77,7 @@ public class Joke {
         this.status = StatusType.NOT_VERIFIED;
 
         this.charCount = content.length();
+        this.createdAt = LocalDateTime.now();
     }
 
     public void changeLikeAmount(int value){

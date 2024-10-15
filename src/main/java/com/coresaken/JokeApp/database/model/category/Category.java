@@ -30,8 +30,8 @@ public class Category {
     }
 
     public void changeJokeAmount(int value){
-        jokeAmount+=value;
-        if(jokeAmount<0){
+        jokeAmount +=value;
+        if(jokeAmount <0){
             jokeAmount = 0;
         }
     }

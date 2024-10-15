@@ -63,6 +63,7 @@ public class EditJokeServiceTest {
         Long jokeId = 1L;
         Joke joke = new Joke();
         joke.setId(jokeId);
+        joke.setStatus(Joke.StatusType.ACCEPTED);
 
         Category category = new Category();
         category.setJokeAmount(100);

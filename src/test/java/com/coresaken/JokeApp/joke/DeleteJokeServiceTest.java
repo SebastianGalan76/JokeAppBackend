@@ -44,6 +44,7 @@ public class DeleteJokeServiceTest {
         Joke joke = new Joke();
         joke.setId(jokeId);
         joke.setCategories(List.of(category));
+        joke.setStatus(Joke.StatusType.ACCEPTED);
         when(jokeRepository.findById(jokeId)).thenReturn(Optional.of(joke));
 
         User user = new User();

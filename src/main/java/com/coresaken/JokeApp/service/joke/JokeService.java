@@ -74,7 +74,8 @@ public class JokeService {
         Pageable pageable = PageRequest.of(page, 15, Sort.by("id").descending());
 
         Page<Joke> jokes = jokeRepository.findAccepted(pageable);
-        Page<JokeDto> jokeDtoPage = filterAndPaginateAcceptedJokes(jokes, user, request.getRemoteAddr(), pageable);
+        Page<JokeDto> jokeDtoPage = jokes.map(joke -> JokeDto.build(user, joke, request.getRemoteAddr()));
+
         PageResponse<JokeDto> jokeResponse = new PageResponse<>();
         jokeResponse.setStatus(ResponseStatusEnum.SUCCESS);
         jokeResponse.setContent(jokeDtoPage);
@@ -107,16 +108,6 @@ public class JokeService {
         jokeResponse.setContent(jokeDtoPage);
 
         return jokeResponse;
-    }
-
-    public Page<JokeDto> filterAndPaginateAcceptedJokes(Page<Joke> jokes, User user, String remoteAddr, Pageable pageable) {
-        List<JokeDto> filteredJokes = jokes.stream().map(joke -> JokeDto.build(user, joke, remoteAddr)).toList();
-
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), filteredJokes.size());
-
-        List<JokeDto> paginatedJokes = filteredJokes.subList(start, end);
-        return new PageImpl<>(paginatedJokes, pageable, filteredJokes.size());
     }
 
     public ResponseEntity<PageResponse<JokeDto>> getUnverifiedJokes(int page, HttpServletRequest request) {
